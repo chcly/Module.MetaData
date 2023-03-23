@@ -1,9 +1,14 @@
 set(TestTargetName ${TargetName}Test)
 include(TestDirectory)
+include(${CMAKE_CURRENT_SOURCE_DIR}/Transformer.cmake)
+
+
 gen_path_to_here()
 
 set(TestTarget_SRC
     Test1.cpp
+    Transformer.cmake
+
 )
 
 include_directories(. ${GTEST_INCLUDE})

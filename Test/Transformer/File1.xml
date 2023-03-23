@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<CastXML format="1.3.1">
+  <Namespace id="_1" name="File1" context="_2" members="_3"/>
+  <Class id="_3" name="ClassA" context="_1" location="f1:5" file="f1" line="5" members="_4 _5 _6 _7 _8 _9 _10 _11" size="32" align="32"/>
+  <Field id="_4" name="_x" type="_12" init="{0}" context="_3" access="private" location="f1:8" file="f1" line="8" offset="0"/>
+  <Constructor id="_5" name="ClassA" context="_3" access="public" location="f1:11" file="f1" line="11" inline="1"/>
+  <Destructor id="_6" name="ClassA" context="_3" access="public" location="f1:12" file="f1" line="12" inline="1"/>
+  <Constructor id="_7" name="ClassA" context="_3" access="public" location="f1:15" file="f1" line="15" inline="1">
+    <Argument name="rhs" type="_13" location="f1:15" file="f1" line="15"/>
+  </Constructor>
+  <Constructor id="_8" name="ClassA" context="_3" access="public" location="f1:16" file="f1" line="16">
+    <Argument name="x" type="_14" location="f1:16" file="f1" line="16"/>
+  </Constructor>
+  <Method id="_9" name="doSomething" returns="_15" context="_3" access="public" location="f1:18" file="f1" line="18" mangled="?doSomething@ClassA@File1@@QEAAXXZ"/>
+  <Method id="_10" name="x" returns="_12" context="_3" access="public" location="f1:21" file="f1" line="21" const="1" inline="1" mangled="?x@ClassA@File1@@QEBAHXZ"/>
+  <OperatorMethod id="_11" name="=" returns="_16" context="_3" access="public" location="f1:5" file="f1" line="5" inline="1" artificial="1" mangled="??4ClassA@File1@@QEAAAEAV01@AEBV01@@Z">
+    <Argument type="_13" location="f1:5" file="f1" line="5"/>
+  </OperatorMethod>
+  <FundamentalType id="_12" name="int" size="32" align="32"/>
+  <ReferenceType id="_13" type="_3c" size="64" align="64"/>
+  <CvQualifiedType id="_3c" type="_3" const="1"/>
+  <ReferenceType id="_14" type="_12c" size="64" align="64"/>
+  <CvQualifiedType id="_12c" type="_12" const="1"/>
+  <FundamentalType id="_15" name="void" size="0" align="8"/>
+  <ReferenceType id="_16" type="_3" size="64" align="64"/>
+  <Namespace id="_2" name="::"/>
+  <File id="f1" name="F:/Internal/repos/CastXml/Test/Source/File1.h"/>
+</CastXML>

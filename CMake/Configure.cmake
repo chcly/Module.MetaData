@@ -26,6 +26,7 @@ endif()
 include(StaticRuntime)
 include(GTestUtils)
 include(ExternalTarget)
+include(CastXMLConfig)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -44,4 +45,28 @@ configure_gtest(${CastXmlParser_SOURCE_DIR}/Test/googletest
                 ${CastXmlParser_SOURCE_DIR}/Test/googletest/googletest/include)
 
 
+DefineExternalTargetEx(
+    Utils Extern
+    ${CastXmlParser_SOURCE_DIR}/Internal/Utils 
+    ${CastXmlParser_SOURCE_DIR}/Internal/Utils
+    ${CastXmlParser_BUILD_TEST}
+    ${CastXmlParser_AUTO_RUN_TEST}
+)
+
+
+DefineExternalTargetEx(
+    Xml Extern
+    ${CastXmlParser_SOURCE_DIR}/Internal/Xml 
+    ${CastXmlParser_SOURCE_DIR}/Internal/Xml
+    ${CastXmlParser_BUILD_TEST}
+    ${CastXmlParser_AUTO_RUN_TEST}
+)
+
+DefineExternalTargetEx(
+    ParserBase Extern
+    ${CastXmlParser_SOURCE_DIR}/Internal/ParserBase 
+    ${CastXmlParser_SOURCE_DIR}/Internal/ParserBase
+    ${CastXmlParser_BUILD_TEST}
+    ${CastXmlParser_AUTO_RUN_TEST}
+)
 set(Configure_SUCCEEDED TRUE)

@@ -32,6 +32,9 @@ if (CastXmlParser_ExternalTarget)
     set(TargetGroup   ${CastXmlParser_TargetGroup})
 else()
     add_subdirectory(CMake)
+    add_subdirectory(Internal/Utils)
+    add_subdirectory(Internal/ParserBase)
+    add_subdirectory(Internal/Xml)
 
     set(TargetFolders TRUE)
     set(TargetName CastXmlParser)
@@ -41,7 +44,7 @@ else()
     set(CastXmlParser_LIBRARY  ${TargetName})
 endif()
 
-add_subdirectory(Source)
+add_subdirectory(CastXmlParser)
 
 if (CastXmlParser_BUILD_TEST)
     if (NOT CastXmlParser_ExternalTarget)
