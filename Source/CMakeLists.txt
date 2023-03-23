@@ -20,9 +20,22 @@
 set(TargetName_SOURCE 
     Main.cpp)
 
+set(CastEXE "H:/SysBin/castxml-windows/castxml/bin/castxml.exe")
+
+
+
+
+add_custom_command(
+	OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/Main.xml
+	COMMAND ${CastEXE} --castxml-start Blarg --castxml-output=1.4.0 --castxml-cc-msvc cl -o ${CMAKE_CURRENT_BINARY_DIR}/Main.xml ${CMAKE_CURRENT_SOURCE_DIR}/Main.cpp
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/Main.cpp
+	COMMENT "Converting Main.cpp"
+	)
+
 add_executable(
     ${TargetName} 
     ${TargetName_SOURCE}
+    ${CMAKE_CURRENT_BINARY_DIR}/Main.xml
 )
 
 if (TargetFolders)

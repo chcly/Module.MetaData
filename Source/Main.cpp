@@ -1,7 +1,19 @@
-#include <cstdio>
 
-int main(int argc, char** argv)
+
+
+// Foo Bar
+class Blarg
 {
-    printf("Hello world\n");
-    return 0;
+public:
+    Blarg(){}
+    Blarg(int a){}
+    Blarg(int a, int b){}
+
+    
+};
+
+
+int main()
+{
+    
 }
