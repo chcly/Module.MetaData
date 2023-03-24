@@ -11,7 +11,9 @@ set(TestTarget_SRC
 
 )
 
-include_directories(. ${GTEST_INCLUDE})
+include_directories(
+    ${GTEST_INCLUDE}
+)
 
 add_executable(
     ${TestTargetName}
