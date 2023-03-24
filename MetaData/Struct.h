@@ -1,10 +1,10 @@
 #pragma once
-#include "MetaData/Type.h"
+#include "MetaData/Location.h"
 #include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
-    class Struct : public Type
+    class Struct : public Location
     {
     public:
         static constexpr TypeCode id = StructTag;
@@ -18,7 +18,7 @@ namespace Rt2::MetaData
         TypeArray _members;
 
     public:
-        Struct(const String& id, const String& name, TypeCode code);
+        Struct(const String& sId, const String& name, TypeCode code);
 
         size_t sizeInBytes() const;
 

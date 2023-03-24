@@ -19,7 +19,7 @@ namespace Rt2::MetaData
         size_t _align{0};
 
     public:
-        PointerType(const String& id, const String& name, TypeCode code);
+        PointerType(const String& sId, const String& name, TypeCode code);
 
         size_t sizeInBytes() const;
 

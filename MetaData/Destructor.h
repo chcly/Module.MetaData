@@ -1,10 +1,10 @@
 #pragma once
-#include "MetaData/Type.h"
+#include "MetaData/Location.h"
 #include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
-    class Destructor : public Type
+    class Destructor : public Location
     {
     public:
         static constexpr TypeCode id = DestructorTag;
@@ -17,7 +17,7 @@ namespace Rt2::MetaData
         uint8_t _flags{NoFlags};
 
     public:
-        Destructor(const String& id, const String& name, TypeCode code);
+        Destructor(const String& sId, const String& name, TypeCode code);
 
         AccessType access() const;
 

@@ -3,8 +3,8 @@
 
 namespace Rt2::MetaData
 {
-    Field::Field(const String& id, const String& name, const TypeCode code) :
-        Type(id, name, code)
+    Field::Field(const String& sId, const String& name, const TypeCode code) :
+        Location(sId, name, code)
     {
     }
 

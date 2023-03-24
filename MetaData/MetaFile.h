@@ -28,7 +28,13 @@ namespace Rt2::MetaData
 
         Type* find(const String& id);
 
-        const FileArray&      files() const;
+        Type* find(const String& id, TypeCode type);
+
+        template<typename  T>
+        T* find(const String& id);
+
+        const FileArray& files() const;
+
         const NamespaceArray& namespaces() const;
 
     private:
@@ -37,6 +43,8 @@ namespace Rt2::MetaData
         void createType(const Xml::Node* node);
 
         void mergeMembers(TypeArray& dest, const Xml::Node* node);
+
+        void linkLocation(Location* obj, const Xml::Node* node);
 
         void link(Type* obj, const Xml::Node* node);
 
@@ -74,6 +82,12 @@ namespace Rt2::MetaData
 
         static Type* create(const String& strId, const String& name, TypeCode id);
     };
+
+    template <typename T>
+    T* MetaFile::find(const String& id)
+    {
+        return (T*)find(id, T::id);
+    }
 
     inline String MetaFile::format() const
     {

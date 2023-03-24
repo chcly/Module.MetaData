@@ -1,10 +1,10 @@
 #pragma once
-#include "MetaData/Type.h"
+#include "MetaData/Location.h"
 #include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
-    class Function : public Type
+    class Function : public Location
     {
     public:
         static constexpr TypeCode id = FunctionTag;
@@ -17,7 +17,7 @@ namespace Rt2::MetaData
         uint8_t _flags{NoFlags};
 
     public:
-        Function(const String& id, const String& name, TypeCode code);
+        Function(const String& sId, const String& name, TypeCode code);
 
         Type* returns() const;
 

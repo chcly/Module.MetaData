@@ -15,7 +15,7 @@ namespace Rt2::MetaData
         TypeArray _members;
 
     public:
-        Namespace(const String& id, const String& name, TypeCode code);
+        Namespace(const String& sId, const String& name, TypeCode code);
 
         const TypeArray& members() const;
     };

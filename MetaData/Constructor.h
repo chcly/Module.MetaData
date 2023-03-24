@@ -1,10 +1,10 @@
 #pragma once
-#include "MetaData/Type.h"
+#include "MetaData/Location.h"
 #include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
-    class Constructor : public Type
+    class Constructor : public Location
     {
     public:
         static constexpr TypeCode id = ConstructorTag;
@@ -17,7 +17,7 @@ namespace Rt2::MetaData
         uint8_t _flags{NoFlags};
 
     public:
-        Constructor(const String& id, const String& name, TypeCode code);
+        Constructor(const String& sId, const String& name, TypeCode code);
 
         AccessType access() const;
 

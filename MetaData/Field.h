@@ -1,10 +1,10 @@
 #pragma once
-#include "MetaData/Type.h"
+#include "MetaData/Location.h"
 #include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
-    class Field : public Type
+    class Field : public Location
     {
     public:
         static constexpr TypeCode id = FieldTag;
@@ -19,7 +19,7 @@ namespace Rt2::MetaData
         Type* _type{nullptr};
 
     public:
-        Field(const String& id, const String& name, TypeCode code);
+        Field(const String& sId, const String& name, TypeCode code);
 
         AccessType access() const;
 

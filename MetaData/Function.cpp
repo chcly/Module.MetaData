@@ -3,8 +3,8 @@
 
 namespace Rt2::MetaData
 {
-    Function::Function(const String& id, const String& name, const TypeCode code) :
-        Type(id, name, code)
+    Function::Function(const String& sId, const String& name, const TypeCode code) :
+        Location(sId, name, code)
     {
     }
 

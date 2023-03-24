@@ -17,7 +17,7 @@ namespace Rt2::MetaData
         uint8_t _flags{NoFlags};
 
     public:
-        CvQualifiedType(const String& id, const String& name, TypeCode code);
+        CvQualifiedType(const String& sId, const String& name, TypeCode code);
 
         uint8_t flags() const;
 

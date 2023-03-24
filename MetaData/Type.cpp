@@ -3,12 +3,13 @@
 namespace Rt2::MetaData
 {
 
-    Type::Type(String id, String name, const TypeCode code) :
-        _id(std::move(id)),
+    Type::Type(String hash, String name, const TypeCode code) :
+        _id(std::move(hash)),
         _name(std::move(name)),
         _code(code)
     {
     }
+
 
     bool Type::hasChild(Type* type) const
     {

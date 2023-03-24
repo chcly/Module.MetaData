@@ -22,6 +22,9 @@ namespace Rt2::MetaData
         PointerTypeTag,
         ArgumentTag,
         MaxTypeCode,
+
+        // non xml tags
+        LocationTag,
     };
 
     enum AccessType
@@ -66,6 +69,7 @@ namespace Rt2::MetaData
     class OperatorMethod;
     class ReferenceType;
     class PointerType;
+    class Location;
 
     using TypeArray      = SimpleArray<Type*>;
     using FileArray      = SimpleArray<File*>;

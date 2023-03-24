@@ -6,6 +6,8 @@
 #include "ThisDir.h"
 #include "gtest/gtest.h"
 #include "MetaData/Field.h"
+#include "MetaData/File.h"
+#include "Utils/Directory/Path.h"
 
 GTEST_TEST(MetaData, File_001)
 {
@@ -37,6 +39,9 @@ GTEST_TEST(MetaData, File_001)
         EXPECT_EQ(tc1->code(), Rt2::MetaData::ClassTag);
 
         Rt2::MetaData::Class* st0 = tc1->cast<Rt2::MetaData::Class>();
+        Rt2::Console::println(st0->readLine());
+
+
         EXPECT_NE(st0, nullptr);
         EXPECT_FALSE(st0->members().empty());
         EXPECT_EQ(st0->members().size(), 9);
@@ -64,4 +69,33 @@ GTEST_TEST(MetaData, File_001)
         EXPECT_EQ(st0->parent(), tc1);
         EXPECT_TRUE(tc1->hasChild(st0));
     }
+}
+
+
+
+
+GTEST_TEST(MetaData, File_002)
+{
+    Rt2::MetaData::MetaFile  fp;
+    Rt2::InputFileStream ifs;
+    ifs.open(TestFile("Transformer/File1.xml"));
+    EXPECT_TRUE(ifs.is_open());
+    EXPECT_NO_THROW({ fp.load(ifs); });
+
+
+    for (const auto *file : fp.files())
+    {
+        Rt2::Directory::Path path(file->name());
+        Rt2::Console::println(path.base());
+
+        Rt2::StringArray lines;
+        file->readLines(lines);
+
+        for (const auto &ln : lines)
+            Rt2::Console::println(ln);
+
+    }
+
+
+
 }

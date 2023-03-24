@@ -74,7 +74,6 @@ namespace Rt2::MetaData
         clear();
     }
 
-
     void MetaFile::clear()
     {
         for (const auto& type : _types)
@@ -93,6 +92,13 @@ namespace Rt2::MetaData
         return nullptr;
     }
 
+    Type* MetaFile::find(const String& id, TypeCode type)
+    {
+        if (Type* findResult = find(id);
+            findResult && findResult->isTypeOf(type))
+            return findResult;
+        return nullptr;
+    }
 
     void MetaFile::createType(const Xml::Node* node)
     {
@@ -151,6 +157,12 @@ namespace Rt2::MetaData
         }
     }
 
+    void MetaFile::linkLocation(Location* obj, const Xml::Node* node)
+    {
+        obj->_file = find<File>(node->attribute("file"));
+        obj->_line = Char::toUint64(node->attribute("line", "0"));
+    }
+
     void MetaFile::link(Namespace* obj, const Xml::Node* node)
     {
         mergeMembers(obj->_members, node);
@@ -159,6 +171,7 @@ namespace Rt2::MetaData
     void MetaFile::link(Class* obj, const Xml::Node* node)
     {
         mergeMembers(obj->_members, node);
+        linkLocation(obj, node);
 
         obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
 
@@ -167,6 +180,8 @@ namespace Rt2::MetaData
 
     void MetaFile::link(Function* obj, const Xml::Node* node)
     {
+        linkLocation(obj, node);
+
         obj->_returns = find(node->attribute("returns"));
 
         obj->_flags = Ac::flags(node);
@@ -176,6 +191,8 @@ namespace Rt2::MetaData
     {
         mergeMembers(obj->_members, node);
 
+        linkLocation(obj, node);
+
         obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
 
         obj->_align = Char::toUint64(node->attribute("align", "0"));
@@ -183,6 +200,8 @@ namespace Rt2::MetaData
 
     void MetaFile::link(Field* obj, const Xml::Node* node)
     {
+        linkLocation(obj, node);
+
         obj->_offset = Char::toUint64(node->attribute("offset", "0"));
 
         obj->_access = Ac::access(node->attribute("access"));
@@ -192,6 +211,8 @@ namespace Rt2::MetaData
 
     void MetaFile::link(Constructor* obj, const Xml::Node* node)
     {
+        linkLocation(obj, node);
+
         obj->_access = Ac::access(node->attribute("access"));
 
         obj->_flags = Ac::flags(node);
@@ -199,6 +220,8 @@ namespace Rt2::MetaData
 
     void MetaFile::link(Destructor* obj, const Xml::Node* node)
     {
+        linkLocation(obj, node);
+
         obj->_access = Ac::access(node->attribute("access"));
 
         obj->_flags = Ac::flags(node);
@@ -206,6 +229,8 @@ namespace Rt2::MetaData
 
     void MetaFile::link(Method* obj, const Xml::Node* node)
     {
+        linkLocation(obj, node);
+
         obj->_access = Ac::access(node->attribute("access"));
 
         obj->_flags = Ac::flags(node);
@@ -215,6 +240,8 @@ namespace Rt2::MetaData
 
     void MetaFile::link(OperatorMethod* obj, const Xml::Node* node)
     {
+        linkLocation(obj, node);
+
         obj->_access = Ac::access(node->attribute("access"));
 
         obj->_flags = Ac::flags(node);

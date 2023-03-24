@@ -3,8 +3,8 @@
 
 namespace Rt2::MetaData
 {
-    Class::Class(const String& id, const String& name, const TypeCode code) :
-        Type(id, name, code)
+    Class::Class(const String& sId, const String& name, const TypeCode code) :
+        Location(sId, name, code)
     {
     }
 

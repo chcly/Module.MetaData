@@ -4,6 +4,12 @@
 
 namespace Rt2::MetaData
 {
+    template <typename T>
+    bool isTypeOf(TypeCode code)
+    {
+        return code == T::id;
+    }
+
     class Type
     {
     private:
@@ -22,11 +28,13 @@ namespace Rt2::MetaData
         void addChild(Type* type);
 
     public:
-        explicit Type(String id, String name, TypeCode code);
+        explicit Type(String hash, String name, TypeCode code);
 
         const TypeCode& code() const;
 
         const String& id() const;
+
+        const String& name() const;
 
         const Type* parent() const;
 
@@ -36,13 +44,9 @@ namespace Rt2::MetaData
 
         template <typename T>
         T* cast();
-    };
 
-    template <typename T>
-    bool isTypeOf(TypeCode code)
-    {
-        return code == T::id;
-    }
+        bool isTypeOf(TypeCode code) const;
+    };
 
     template <typename T>
     T* Type::cast()
@@ -50,6 +54,11 @@ namespace Rt2::MetaData
         if (code() == T::id)
             return static_cast<T*>(this);
         return nullptr;
+    }
+
+    inline bool Type::isTypeOf(TypeCode code) const
+    {
+        return this->code() == code;
     }
 
     inline const TypeCode& Type::code() const
@@ -70,6 +79,11 @@ namespace Rt2::MetaData
     inline const TypeArray& Type::children() const
     {
         return _children;
+    }
+
+    inline const String& Type::name() const
+    {
+        return _name;
     }
 
 }  // namespace Rt2::MetaData

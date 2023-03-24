@@ -17,7 +17,7 @@ namespace Rt2::MetaData
         size_t _align{0};
 
     public:
-        FundamentalType(const String& id, const String& name, TypeCode code);
+        FundamentalType(const String& sId, const String& name, TypeCode code);
 
         size_t sizeInBytes() const;
 
