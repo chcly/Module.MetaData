@@ -5,7 +5,7 @@ set_group(TargetName_SRC
 )
 
 include_directories(
-    ${CastXmlParser_INCLUDE}
+    ${MetaData_INCLUDE}
     ${Utils_INCLUDE}
     ${Xml_INCLUDE}
     ${ParserBase_INCLUDE}

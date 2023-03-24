@@ -30,43 +30,43 @@ include(CastXMLConfig)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
-option(CastXmlParser_BUILD_TEST          "Build the unit test program." ON)
-option(CastXmlParser_AUTO_RUN_TEST       "Automatically run the test program." ON)
-option(CastXmlParser_USE_STATIC_RUNTIME  "Build with the MultiThreaded(Debug) runtime library." ON)
+option(MetaData_BUILD_TEST          "Build the unit test program." ON)
+option(MetaData_AUTO_RUN_TEST       "Automatically run the test program." ON)
+option(MetaData_USE_STATIC_RUNTIME  "Build with the MultiThreaded(Debug) runtime library." ON)
 
-if (CastXmlParser_USE_STATIC_RUNTIME)
+if (MetaData_USE_STATIC_RUNTIME)
     set_static_runtime()
 else()
     set_dynamic_runtime()
 endif()
 
 
-configure_gtest(${CastXmlParser_SOURCE_DIR}/Test/googletest 
-                ${CastXmlParser_SOURCE_DIR}/Test/googletest/googletest/include)
+configure_gtest(${MetaData_SOURCE_DIR}/Test/googletest 
+                ${MetaData_SOURCE_DIR}/Test/googletest/googletest/include)
 
 
 DefineExternalTargetEx(
     Utils Extern
-    ${CastXmlParser_SOURCE_DIR}/Internal/Utils 
-    ${CastXmlParser_SOURCE_DIR}/Internal/Utils
-    ${CastXmlParser_BUILD_TEST}
-    ${CastXmlParser_AUTO_RUN_TEST}
+    ${MetaData_SOURCE_DIR}/Internal/Utils 
+    ${MetaData_SOURCE_DIR}/Internal/Utils
+    ${MetaData_BUILD_TEST}
+    ${MetaData_AUTO_RUN_TEST}
 )
 
 
 DefineExternalTargetEx(
     Xml Extern
-    ${CastXmlParser_SOURCE_DIR}/Internal/Xml 
-    ${CastXmlParser_SOURCE_DIR}/Internal/Xml
-    ${CastXmlParser_BUILD_TEST}
-    ${CastXmlParser_AUTO_RUN_TEST}
+    ${MetaData_SOURCE_DIR}/Internal/Xml 
+    ${MetaData_SOURCE_DIR}/Internal/Xml
+    ${MetaData_BUILD_TEST}
+    ${MetaData_AUTO_RUN_TEST}
 )
 
 DefineExternalTargetEx(
     ParserBase Extern
-    ${CastXmlParser_SOURCE_DIR}/Internal/ParserBase 
-    ${CastXmlParser_SOURCE_DIR}/Internal/ParserBase
-    ${CastXmlParser_BUILD_TEST}
-    ${CastXmlParser_AUTO_RUN_TEST}
+    ${MetaData_SOURCE_DIR}/Internal/ParserBase 
+    ${MetaData_SOURCE_DIR}/Internal/ParserBase
+    ${MetaData_BUILD_TEST}
+    ${MetaData_AUTO_RUN_TEST}
 )
 set(Configure_SUCCEEDED TRUE)

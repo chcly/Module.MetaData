@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.15)
-project(CastXmlParser)
+project(MetaData)
 
 # Use C++-17 by default.
 enable_language(CXX)
@@ -11,13 +11,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # CMake - Contains project local modules.
 #
 # CMake/Modules - Contains project independent modules.
-#   GitUpdate.cmake invokes python ${CastXmlParser_SOURCE_DIR}/gitupdate.py
+#   GitUpdate.cmake invokes python ${MetaData_SOURCE_DIR}/gitupdate.py
 #   to pull all submodules and update to head.
 #   If this fails, it will attempt to invoke git directly to pull 
 #   submodules. 
 list(APPEND CMAKE_MODULE_PATH 
-  ${CastXmlParser_SOURCE_DIR}/CMake 
-  ${CastXmlParser_SOURCE_DIR}/CMake/Modules
+  ${MetaData_SOURCE_DIR}/CMake 
+  ${MetaData_SOURCE_DIR}/CMake/Modules
 )
 include(Configure)
 if (NOT Configure_SUCCEEDED)
@@ -26,10 +26,10 @@ endif()
 
 
 
-if (CastXmlParser_ExternalTarget)
-    set(TargetFolders ${CastXmlParser_TargetFolders})
-    set(TargetName    ${CastXmlParser_TargetName})
-    set(TargetGroup   ${CastXmlParser_TargetGroup})
+if (MetaData_ExternalTarget)
+    set(TargetFolders ${MetaData_TargetFolders})
+    set(TargetName    ${MetaData_TargetName})
+    set(TargetGroup   ${MetaData_TargetGroup})
 else()
     add_subdirectory(CMake)
     add_subdirectory(Internal/Utils)
@@ -37,17 +37,17 @@ else()
     add_subdirectory(Internal/Xml)
 
     set(TargetFolders TRUE)
-    set(TargetName CastXmlParser)
+    set(TargetName MetaData)
     set(TargetGroup )
 
-    set(CastXmlParser_INCLUDE  ${CastXmlParser_SOURCE_DIR})
-    set(CastXmlParser_LIBRARY  ${TargetName})
+    set(MetaData_INCLUDE  ${MetaData_SOURCE_DIR})
+    set(MetaData_LIBRARY  ${TargetName})
 endif()
 
-add_subdirectory(CastXmlParser)
+add_subdirectory(MetaData)
 
-if (CastXmlParser_BUILD_TEST)
-    if (NOT CastXmlParser_ExternalTarget)
+if (MetaData_BUILD_TEST)
+    if (NOT MetaData_ExternalTarget)
         add_gtest_source(Extern/ThirdParty)
     endif()
 

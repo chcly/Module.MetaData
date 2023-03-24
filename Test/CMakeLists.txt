@@ -13,6 +13,10 @@ set(TestTarget_SRC
 
 include_directories(
     ${GTEST_INCLUDE}
+    ${MetaData_INCLUDE}
+    ${Utils_INCLUDE}
+    ${Xml_INCLUDE}
+    ${ParserBase_INCLUDE}
 )
 
 add_executable(
@@ -22,6 +26,10 @@ add_executable(
 target_link_libraries(
     ${TestTargetName} 
     ${GTEST_LIBRARY}
+    ${MetaData_LIBRARY}
+    ${Utils_LIBRARY}
+    ${Xml_LIBRARY}
+    ${ParserBase_LIBRARY}
 )
 
 set_target_properties(
@@ -30,6 +38,6 @@ set_target_properties(
 )
 
 
-if (CastXmlParser_AUTO_RUN_TEST)
+if (MetaData_AUTO_RUN_TEST)
     run_test(${TestTargetName})
 endif()

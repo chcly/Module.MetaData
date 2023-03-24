@@ -12,7 +12,8 @@ namespace File1
         ~ClassA() = default;
 
         ClassA(const ClassA& rhs) = default;
-        ClassA(const int& x);
+        explicit ClassA(const int& x);
+        explicit ClassA(const int* x);
 
         void doSomething();
 
