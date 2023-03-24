@@ -10,6 +10,12 @@ namespace Rt2::MetaData
     {
     }
 
+    bool Type::hasChild(Type* type) const
+    {
+        // is linear..
+        return _children.find(type) != Npos32;
+    }
+
     void Type::addChild(Type* type)
     {
         if (!type)

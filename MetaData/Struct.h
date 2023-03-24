@@ -4,43 +4,42 @@
 
 namespace Rt2::MetaData
 {
-    class ReferenceType : public Type
+    class Struct : public Type
     {
     public:
-        static constexpr TypeCode id = ReferenceTypeTag;
+        static constexpr TypeCode id = StructTag;
 
     private:
         friend class MetaFile;  // To define an access only API.
 
-        Type* _type{nullptr};
-
         size_t _sizeInBytes{0};
-
         size_t _align{0};
 
+        TypeArray _members;
+
     public:
-        ReferenceType(const String& id, const String& name, TypeCode code);
+        Struct(const String& id, const String& name, TypeCode code);
 
         size_t sizeInBytes() const;
 
         size_t alignment() const;
 
-        Type* type() const;
+        const TypeArray& members() const;
     };
 
-    inline size_t ReferenceType::sizeInBytes() const
+    inline size_t Struct::sizeInBytes() const
     {
         return _sizeInBytes;
     }
 
-    inline size_t ReferenceType::alignment() const
+    inline size_t Struct::alignment() const
     {
         return _align;
     }
 
-    inline Type* ReferenceType::type() const
+    inline const TypeArray& Struct::members() const
     {
-        return _type;
+        return _members;
     }
 
 }  // namespace Rt2::MetaData

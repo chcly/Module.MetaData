@@ -1,32 +1,49 @@
 <?xml version="1.0"?>
 <CastXML format="1.3.1">
-  <Namespace id="_1" name="File1" context="_2" members="_3"/>
-  <Class id="_3" name="ClassA" context="_1" location="f1:5" file="f1" line="5" members="_4 _5 _6 _7 _8 _9 _10 _11 _12" size="32" align="32"/>
-  <Field id="_4" name="_x" type="_13" init="{0}" context="_3" access="private" location="f1:8" file="f1" line="8" offset="0"/>
-  <Constructor id="_5" name="ClassA" context="_3" access="public" location="f1:11" file="f1" line="11" inline="1"/>
-  <Destructor id="_6" name="ClassA" context="_3" access="public" location="f1:12" file="f1" line="12" inline="1"/>
-  <Constructor id="_7" name="ClassA" context="_3" access="public" location="f1:14" file="f1" line="14" inline="1">
-    <Argument name="rhs" type="_14" location="f1:14" file="f1" line="14"/>
+  <Namespace id="_1" name="File1" context="_2" members="_3 _4 _5"/>
+  <Class id="_3" name="ClassA" context="_1" location="f1:5" file="f1" line="5" members="_6 _7 _8 _9 _10 _11 _12 _13 _14" size="32" align="32"/>
+  <Struct id="_4" name="Wrapper" context="_1" location="f1:23" file="f1" line="23" members="_15 _16 _17 _18 _19" size="32" align="32"/>
+  <Function id="_5" name="Foo" returns="_4" context="_1" location="f1:28" file="f1" line="28" extern="1" mangled="?Foo@File1@@YA?AUWrapper@1@PEAVClassA@1@@Z">
+    <Argument name="ref" type="_20" location="f1:28" file="f1" line="28"/>
+  </Function>
+  <Field id="_6" name="_x" type="_21" init="{0}" context="_3" access="private" location="f1:8" file="f1" line="8" offset="0"/>
+  <Constructor id="_7" name="ClassA" context="_3" access="public" location="f1:11" file="f1" line="11" inline="1"/>
+  <Destructor id="_8" name="ClassA" context="_3" access="public" location="f1:12" file="f1" line="12" inline="1"/>
+  <Constructor id="_9" name="ClassA" context="_3" access="public" location="f1:14" file="f1" line="14" inline="1">
+    <Argument name="rhs" type="_22" location="f1:14" file="f1" line="14"/>
   </Constructor>
-  <Constructor id="_8" name="ClassA" context="_3" access="public" location="f1:15" file="f1" line="15" explicit="1">
-    <Argument name="x" type="_15" location="f1:15" file="f1" line="15"/>
+  <Constructor id="_10" name="ClassA" context="_3" access="public" location="f1:15" file="f1" line="15" explicit="1">
+    <Argument name="x" type="_23" location="f1:15" file="f1" line="15"/>
   </Constructor>
-  <Constructor id="_9" name="ClassA" context="_3" access="public" location="f1:16" file="f1" line="16" explicit="1">
-    <Argument name="x" type="_16" location="f1:16" file="f1" line="16"/>
+  <Constructor id="_11" name="ClassA" context="_3" access="public" location="f1:16" file="f1" line="16" explicit="1">
+    <Argument name="x" type="_24" location="f1:16" file="f1" line="16"/>
   </Constructor>
-  <Method id="_10" name="doSomething" returns="_17" context="_3" access="public" location="f1:18" file="f1" line="18" mangled="?doSomething@ClassA@File1@@QEAAXXZ"/>
-  <Method id="_11" name="x" returns="_13" context="_3" access="public" location="f1:20" file="f1" line="20" const="1" inline="1" mangled="?x@ClassA@File1@@QEBAHXZ"/>
-  <OperatorMethod id="_12" name="=" returns="_18" context="_3" access="public" location="f1:5" file="f1" line="5" inline="1" artificial="1" mangled="??4ClassA@File1@@QEAAAEAV01@AEBV01@@Z">
-    <Argument type="_14" location="f1:5" file="f1" line="5"/>
+  <Method id="_12" name="doSomething" returns="_25" context="_3" access="public" location="f1:18" file="f1" line="18" mangled="?doSomething@ClassA@File1@@QEAAXXZ"/>
+  <Method id="_13" name="x" returns="_21" context="_3" access="public" location="f1:20" file="f1" line="20" const="1" inline="1" mangled="?x@ClassA@File1@@QEBAHXZ"/>
+  <OperatorMethod id="_14" name="=" returns="_26" context="_3" access="public" location="f1:5" file="f1" line="5" inline="1" artificial="1" mangled="??4ClassA@File1@@QEAAAEAV01@AEBV01@@Z">
+    <Argument type="_22" location="f1:5" file="f1" line="5"/>
   </OperatorMethod>
-  <FundamentalType id="_13" name="int" size="32" align="32"/>
-  <ReferenceType id="_14" type="_3c" size="64" align="64"/>
+  <Field id="_15" name="y" type="_21" context="_4" access="public" location="f1:25" file="f1" line="25" offset="0"/>
+  <Constructor id="_16" name="Wrapper" context="_4" access="public" location="f1:23" file="f1" line="23" inline="1" artificial="1"/>
+  <Constructor id="_17" name="Wrapper" context="_4" access="public" location="f1:23" file="f1" line="23" inline="1" artificial="1">
+    <Argument type="_27" location="f1:23" file="f1" line="23"/>
+  </Constructor>
+  <OperatorMethod id="_18" name="=" returns="_28" context="_4" access="public" location="f1:23" file="f1" line="23" inline="1" artificial="1" mangled="??4Wrapper@File1@@QEAAAEAU01@AEBU01@@Z">
+    <Argument type="_27" location="f1:23" file="f1" line="23"/>
+  </OperatorMethod>
+  <Destructor id="_19" name="Wrapper" context="_4" access="public" location="f1:23" file="f1" line="23" inline="1" artificial="1"/>
+  <PointerType id="_20" type="_3" size="64" align="64"/>
+  <FundamentalType id="_21" name="int" size="32" align="32"/>
+  <ReferenceType id="_22" type="_3c" size="64" align="64"/>
   <CvQualifiedType id="_3c" type="_3" const="1"/>
-  <ReferenceType id="_15" type="_13c" size="64" align="64"/>
-  <CvQualifiedType id="_13c" type="_13" const="1"/>
-  <PointerType id="_16" type="_13c" size="64" align="64"/>
-  <FundamentalType id="_17" name="void" size="0" align="8"/>
-  <ReferenceType id="_18" type="_3" size="64" align="64"/>
+  <ReferenceType id="_23" type="_21c" size="64" align="64"/>
+  <CvQualifiedType id="_21c" type="_21" const="1"/>
+  <PointerType id="_24" type="_21c" size="64" align="64"/>
+  <FundamentalType id="_25" name="void" size="0" align="8"/>
+  <ReferenceType id="_26" type="_3" size="64" align="64"/>
+  <ReferenceType id="_27" type="_4c" size="64" align="64"/>
+  <CvQualifiedType id="_4c" type="_4" const="1"/>
+  <ReferenceType id="_28" type="_4" size="64" align="64"/>
   <Namespace id="_2" name="::"/>
   <File id="f1" name="F:/Internal/repos/CastXml/Test/Source/File1.h"/>
 </CastXML>

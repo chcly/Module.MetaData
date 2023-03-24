@@ -1,8 +1,11 @@
 #include <cstdio>
 #include "Internal/Utils/Utils/String.h"
 #include "MetaData/MetaFile.h"
+#include "MetaData/Namespace.h"
+#include "MetaData/Class.h"
 #include "ThisDir.h"
 #include "gtest/gtest.h"
+#include "MetaData/Field.h"
 
 GTEST_TEST(MetaData, File_001)
 {
@@ -15,14 +18,50 @@ GTEST_TEST(MetaData, File_001)
     EXPECT_FALSE(fp.format().empty());
     EXPECT_EQ(fp.format(), "1.3.1");
 
-    Rt2::MetaData::Type *tc = fp.find("_1");
-    EXPECT_NE(tc, nullptr);
-    if (tc)
+    Rt2::MetaData::Type *tc0 = fp.find("_1");
+    EXPECT_NE(tc0, nullptr);
+    if (tc0)
     {
-        EXPECT_EQ(tc->type(), Rt2::MetaData::NamespaceTag);
+        EXPECT_EQ(tc0->code(), Rt2::MetaData::NamespaceTag);
 
-        Rt2::MetaData::Namespace* ns = tc->cast<Rt2::MetaData::Namespace>();
+        Rt2::MetaData::Namespace* ns = tc0->cast<Rt2::MetaData::Namespace>();
         EXPECT_NE(ns, nullptr);
         EXPECT_FALSE(ns->members().empty());
+    }
+
+
+    Rt2::MetaData::Type *tc1 = fp.find("_3");
+    EXPECT_NE(tc1, nullptr);
+    if (tc1)
+    {
+        EXPECT_EQ(tc1->code(), Rt2::MetaData::ClassTag);
+
+        Rt2::MetaData::Class* st0 = tc1->cast<Rt2::MetaData::Class>();
+        EXPECT_NE(st0, nullptr);
+        EXPECT_FALSE(st0->members().empty());
+        EXPECT_EQ(st0->members().size(), 9);
+
+        EXPECT_EQ(st0->sizeInBytes(), 32);
+        EXPECT_EQ(st0->alignment(), 32);
+        EXPECT_EQ(st0->parent(), tc0);
+        EXPECT_TRUE(tc0->hasChild(st0));
+    }
+
+
+
+    Rt2::MetaData::Type *tc2 = fp.find("_6");
+    EXPECT_NE(tc2, nullptr);
+    if (tc2)
+    {
+        EXPECT_EQ(tc2->code(), Rt2::MetaData::FieldTag);
+
+        Rt2::MetaData::Field* st0 = tc2->cast<Rt2::MetaData::Field>();
+        EXPECT_NE(st0, nullptr);
+        EXPECT_EQ(st0->access(), Rt2::MetaData::PrivateTag);
+        EXPECT_EQ(st0->offset(), 0);
+        EXPECT_NE(st0->type(), nullptr);
+
+        EXPECT_EQ(st0->parent(), tc1);
+        EXPECT_TRUE(tc1->hasChild(st0));
     }
 }

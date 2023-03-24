@@ -1,9 +1,9 @@
-#include "MetaData/Class.h"
+#include "MetaData/Function.h"
 #include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
-    Class::Class(const String& id, const String& name, const TypeCode code) :
+    Function::Function(const String& id, const String& name, const TypeCode code) :
         Type(id, name, code)
     {
     }

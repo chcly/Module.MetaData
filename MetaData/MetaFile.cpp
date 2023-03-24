@@ -5,12 +5,15 @@
 #include "MetaData/Destructor.h"
 #include "MetaData/Field.h"
 #include "MetaData/File.h"
+#include "MetaData/Function.h"
 #include "MetaData/FundamentalType.h"
 #include "MetaData/Method.h"
 #include "MetaData/Namespace.h"
 #include "MetaData/OperatorMethod.h"
+#include "MetaData/Struct.h"
 #include "PointerType.h"
 #include "ReferenceType.h"
+#include "Utils/Char.h"
 #include "Utils/String.h"
 #include "Xml/File.h"
 
@@ -20,6 +23,8 @@ namespace Rt2::MetaData
     constexpr TypeFilter FileTags[MaxTypeCode] = {
         {        "CastXML",        MinTypeCode},
         {          "Class",           ClassTag},
+        {         "Struct",          StructTag},
+        {       "Function",        FunctionTag},
         {    "Constructor",     ConstructorTag},
         {"CvQualifiedType", CvQualifiedTypeTag},
         {     "Destructor",      DestructorTag},
@@ -31,12 +36,44 @@ namespace Rt2::MetaData
         { "OperatorMethod",  OperatorMethodTag},
         {  "ReferenceType",   ReferenceTypeTag},
         {    "PointerType",     PointerTypeTag},
+        {       "Argument",        ArgumentTag},
     };
+
+    class AttributeConverter
+    {
+    public:
+        static AccessType access(const String& val)
+        {
+            if (val == "public")
+                return PublicTag;
+            if (val == "private")
+                return PrivateTag;
+            if (val == "protected")
+                return ProtectedTag;
+            return UnknownTag;
+        }
+
+        static uint8_t flags(const Xml::Node* node)
+        {
+            uint8_t flags = NoFlags;
+            if (node->attribute("inline", "0") == "1")
+                flags |= Inline;
+            if (node->attribute("extern", "0") == "1")
+                flags |= Extern;
+            if (node->attribute("explicit", "0") == "1")
+                flags |= Explicit;
+            if (node->attribute("artificial", "0") == "1")
+                flags |= Artificial;
+            return flags;
+        }
+    };
+    using Ac = AttributeConverter;
 
     MetaFile::~MetaFile()
     {
         clear();
     }
+
 
     void MetaFile::clear()
     {
@@ -55,6 +92,7 @@ namespace Rt2::MetaData
         }
         return nullptr;
     }
+
 
     void MetaFile::createType(const Xml::Node* node)
     {
@@ -80,24 +118,24 @@ namespace Rt2::MetaData
         _types.insert(type->id(), type);
     }
 
-    void MetaFile::linkContext(Type* obj, const Xml::Node* node)
+    void MetaFile::link(Type* obj, const Xml::Node* node)
     {
         if (!obj || !node)
             throw Exception("invalid arguments");
 
-        if (String ctx = node->attribute("context"); 
+        if (String ctx = node->attribute("context");
             !ctx.empty())
         {
-            if (Type * ctxObj = find(ctx); ctxObj != nullptr)
+            if (Type* ctxObj = find(ctx); ctxObj != nullptr)
                 ctxObj->addChild(obj);
             else
                 Console::println("missing context member: ", ctx);
         }
     }
 
-    void MetaFile::linkNamespace(Namespace* obj, const Xml::Node* node)
+    void MetaFile::mergeMembers(TypeArray& dest, const Xml::Node* node)
     {
-        if (const String members = node->attribute("members"); 
+        if (const String members = node->attribute("members");
             !members.empty())
         {
             StringArray memLink;
@@ -105,17 +143,120 @@ namespace Rt2::MetaData
 
             for (const auto& link : memLink)
             {
-                if (Type* cacheType = find(link); cacheType!=nullptr)
-                    obj->_members.push_back(cacheType);
+                if (Type* cacheType = find(link); cacheType != nullptr)
+                    dest.push_back(cacheType);
                 else
-                    Console::println("missing namespace member: ", link);
+                    Console::println("missing member: ", link);
             }
         }
-
     }
 
-    void MetaFile::linkClass(Namespace* obj, const Xml::Node* node)
+    void MetaFile::link(Namespace* obj, const Xml::Node* node)
     {
+        mergeMembers(obj->_members, node);
+    }
+
+    void MetaFile::link(Class* obj, const Xml::Node* node)
+    {
+        mergeMembers(obj->_members, node);
+
+        obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
+
+        obj->_align = Char::toUint64(node->attribute("align", "0"));
+    }
+
+    void MetaFile::link(Function* obj, const Xml::Node* node)
+    {
+        obj->_returns = find(node->attribute("returns"));
+
+        obj->_flags = Ac::flags(node);
+    }
+
+    void MetaFile::link(Struct* obj, const Xml::Node* node)
+    {
+        mergeMembers(obj->_members, node);
+
+        obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
+
+        obj->_align = Char::toUint64(node->attribute("align", "0"));
+    }
+
+    void MetaFile::link(Field* obj, const Xml::Node* node)
+    {
+        obj->_offset = Char::toUint64(node->attribute("offset", "0"));
+
+        obj->_access = Ac::access(node->attribute("access"));
+
+        obj->_type = find(node->attribute("type"));
+    }
+
+    void MetaFile::link(Constructor* obj, const Xml::Node* node)
+    {
+        obj->_access = Ac::access(node->attribute("access"));
+
+        obj->_flags = Ac::flags(node);
+    }
+
+    void MetaFile::link(Destructor* obj, const Xml::Node* node)
+    {
+        obj->_access = Ac::access(node->attribute("access"));
+
+        obj->_flags = Ac::flags(node);
+    }
+
+    void MetaFile::link(Method* obj, const Xml::Node* node)
+    {
+        obj->_access = Ac::access(node->attribute("access"));
+
+        obj->_flags = Ac::flags(node);
+
+        obj->_returns = find(node->attribute("returns"));
+    }
+
+    void MetaFile::link(OperatorMethod* obj, const Xml::Node* node)
+    {
+        obj->_access = Ac::access(node->attribute("access"));
+
+        obj->_flags = Ac::flags(node);
+
+        obj->_returns = find(node->attribute("returns"));
+    }
+
+    void MetaFile::link(FundamentalType* obj, const Xml::Node* node)
+    {
+        obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
+
+        obj->_align = Char::toUint64(node->attribute("align", "0"));
+    }
+
+    void MetaFile::link(ReferenceType* obj, const Xml::Node* node)
+    {
+        obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
+
+        obj->_align = Char::toUint64(node->attribute("align", "0"));
+
+        obj->_type = find(node->attribute("type"));
+    }
+
+    void MetaFile::link(PointerType* obj, const Xml::Node* node)
+    {
+        obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
+
+        obj->_align = Char::toUint64(node->attribute("align", "0"));
+
+        obj->_type = find(node->attribute("type"));
+    }
+
+    void MetaFile::link(CvQualifiedType* obj, const Xml::Node* node)
+    {
+        obj->_flags = Ac::flags(node);
+
+        obj->_type = find(node->attribute("type"));
+    }
+
+    void MetaFile::link(File* obj, const Xml::Node* node)
+    {
+        _files.push_back(obj);
     }
 
     void MetaFile::linkType(const Xml::Node* node)
@@ -129,37 +270,56 @@ namespace Rt2::MetaData
         if (!cacheType)
             throw Exception("failed to find type:", node->attribute("id"));
 
-        if (cacheType->type() != node->type())
-            throw Exception("type mismatch:", cacheType->type(), ',', node->type());
+        if (cacheType->code() != node->type())
+            throw Exception("type mismatch:", cacheType->code(), ',', node->type());
+
+        link(cacheType, node);
 
         switch ((TypeCode)node->type())
         {
         case NamespaceTag:
-            linkNamespace(cacheType->cast<Namespace>(), node);
-            linkContext(cacheType, node);
+            link(cacheType->cast<Namespace>(), node);
             break;
         case ClassTag:
-            break;
-        case ConstructorTag:
-            break;
-        case CvQualifiedTypeTag:
-            break;
-        case DestructorTag:
+            link(cacheType->cast<Class>(), node);
             break;
         case FieldTag:
+            link(cacheType->cast<Field>(), node);
+            break;
+        case ConstructorTag:
+            link(cacheType->cast<Constructor>(), node);
+            break;
+        case CvQualifiedTypeTag:
+            link(cacheType->cast<CvQualifiedType>(), node);
+            break;
+        case DestructorTag:
+            link(cacheType->cast<Destructor>(), node);
             break;
         case FundamentalTypeTag:
+            link(cacheType->cast<FundamentalType>(), node);
             break;
         case FileTag:
+            link(cacheType->cast<File>(), node);
             break;
         case MethodTag:
+            link(cacheType->cast<Method>(), node);
             break;
         case OperatorMethodTag:
+            link(cacheType->cast<OperatorMethod>(), node);
             break;
         case ReferenceTypeTag:
+            link(cacheType->cast<ReferenceType>(), node);
             break;
         case PointerTypeTag:
+            link(cacheType->cast<PointerType>(), node);
             break;
+        case FunctionTag:
+            link(cacheType->cast<Function>(), node);
+            break;
+        case StructTag:
+            link(cacheType->cast<Struct>(), node);
+            break;
+        case ArgumentTag:
         case MinTypeCode:
         case MaxTypeCode:
         default:
@@ -206,6 +366,11 @@ namespace Rt2::MetaData
             return new ReferenceType(strId, name, id);
         case PointerTypeTag:
             return new PointerType(strId, name, id);
+        case FunctionTag:
+            return new Function(strId, name, id);
+        case StructTag:
+            return new Struct(strId, name, id);
+        case ArgumentTag:
         case MinTypeCode:
         case MaxTypeCode:
         default:

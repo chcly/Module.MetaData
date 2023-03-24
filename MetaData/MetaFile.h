@@ -1,22 +1,22 @@
 #pragma once
 #include "MetaData/Type.h"
-#include "Namespace.h"
-#include "Utils/Array.h"
 #include "Utils/HashMap.h"
 #include "Utils/String.h"
 #include "Xml/Node.h"
 
 namespace Rt2::MetaData
 {
+
     class MetaFile
     {
     public:
-        using Types     = HashTable<String, Type*>;
-        using TypeArray = SimpleArray<Type*>;
+        using Types = HashTable<String, Type*>;
 
     private:
-        Types  _types{};
-        String _format{};
+        Types          _types{};
+        FileArray      _files;
+        String         _format{};
+        NamespaceArray _namespaces;
 
     public:
         MetaFile() = default;
@@ -28,16 +28,45 @@ namespace Rt2::MetaData
 
         Type* find(const String& id);
 
+        const FileArray&      files() const;
+        const NamespaceArray& namespaces() const;
+
     private:
         void clear();
 
         void createType(const Xml::Node* node);
 
-        void linkContext(Type* obj, const Xml::Node* node);
+        void mergeMembers(TypeArray& dest, const Xml::Node* node);
 
-        void linkNamespace(Namespace* obj, const Xml::Node* node);
+        void link(Type* obj, const Xml::Node* node);
 
-        void linkClass(Namespace* obj, const Xml::Node* node);
+        void link(Namespace* obj, const Xml::Node* node);
+
+        void link(Class* obj, const Xml::Node* node);
+
+        void link(Function* obj, const Xml::Node* node);
+
+        void link(Struct* obj, const Xml::Node* node);
+
+        void link(Field* obj, const Xml::Node* node);
+
+        void link(Constructor* obj, const Xml::Node* node);
+
+        void link(Destructor* obj, const Xml::Node* node);
+
+        void link(Method* obj, const Xml::Node* node);
+
+        void link(OperatorMethod* obj, const Xml::Node* node);
+
+        void link(FundamentalType* obj, const Xml::Node* node);
+
+        void link(ReferenceType* obj, const Xml::Node* node);
+
+        void link(PointerType* obj, const Xml::Node* node);
+
+        void link(CvQualifiedType* obj, const Xml::Node* node);
+
+        void link(File* obj, const Xml::Node* node);
 
         void linkType(const Xml::Node* node);
 
@@ -50,4 +79,15 @@ namespace Rt2::MetaData
     {
         return _format;
     }
+
+    inline const FileArray& MetaFile::files() const
+    {
+        return _files;
+    }
+
+    inline const NamespaceArray& MetaFile::namespaces() const
+    {
+        return _namespaces;
+    }
+
 }  // namespace Rt2::MetaData

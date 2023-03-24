@@ -4,10 +4,10 @@
 
 namespace Rt2::MetaData
 {
-    class OperatorMethod : public Type
+    class Function : public Type
     {
     public:
-        static constexpr TypeCode id = OperatorMethodTag;
+        static constexpr TypeCode id = FunctionTag;
 
     private:
         friend class MetaFile;  // To define an access only API.
@@ -16,29 +16,20 @@ namespace Rt2::MetaData
 
         uint8_t _flags{NoFlags};
 
-        AccessType _access{UnknownTag};
-
     public:
-        OperatorMethod(const String& id, const String& name, TypeCode code);
-
-        AccessType access() const;
+        Function(const String& id, const String& name, TypeCode code);
 
         Type* returns() const;
 
         uint8_t flags() const;
     };
 
-    inline AccessType OperatorMethod::access() const
-    {
-        return _access;
-    }
-
-    inline Type* OperatorMethod::returns() const
+    inline Type* Function::returns() const
     {
         return _returns;
     }
 
-    inline uint8_t OperatorMethod::flags() const
+    inline uint8_t Function::flags() const
     {
         return _flags;
     }

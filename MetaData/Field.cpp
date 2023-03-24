@@ -7,4 +7,5 @@ namespace Rt2::MetaData
         Type(id, name, code)
     {
     }
+
 }  // namespace Rt2::MetaData

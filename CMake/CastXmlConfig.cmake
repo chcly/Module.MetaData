@@ -39,6 +39,7 @@ function(compile_and_transfer RESULT TRANSFER_TO_DIR CSV)
                                --castxml-cc-${CastXML_CC} ${CastXML_CC_TOOL}
                                -o ${OUTPUT_SRC} 
                                "${SRC}"
+
             DEPENDS ${SRC}
 	    )
 

@@ -17,4 +17,9 @@ namespace File1
         _x = 2 * (_x - 1);
     }
 
+    Wrapper Foo(ClassA* ref)
+    {
+        ref->doSomething();
+        return {ref->x()};
+    }
 }  // namespace File1

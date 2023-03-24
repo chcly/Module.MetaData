@@ -20,4 +20,10 @@ namespace File1
         int x() const { return _x; }
     };
 
+    struct Wrapper
+    {
+        int y;
+    };
+
+    extern Wrapper Foo(ClassA* ref);
 }  // namespace File1

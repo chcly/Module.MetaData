@@ -10,8 +10,7 @@ namespace Rt2::MetaData
         static constexpr TypeCode id = NamespaceTag;
 
     private:
-        // To define an access only API.
-        friend class MetaFile;
+        friend class MetaFile;  // To define an access only API.
 
         TypeArray _members;
 

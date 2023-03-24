@@ -1,28 +1,9 @@
 #pragma once
-#include "Utils/Array.h"
+#include "MetaData/Declarations.h"
 #include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
-    enum TypeCode
-    {
-        MinTypeCode,
-        ClassTag,
-        ConstructorTag,
-        CvQualifiedTypeTag,
-        DestructorTag,
-        FieldTag,
-        FundamentalTypeTag,
-        FileTag,
-        MethodTag,
-        NamespaceTag,
-        OperatorMethodTag,
-        ReferenceTypeTag,
-        PointerTypeTag,
-        MaxTypeCode,
-    };
-    using TypeArray = SimpleArray<class Type*>;
-
     class Type
     {
     private:
@@ -43,13 +24,15 @@ namespace Rt2::MetaData
     public:
         explicit Type(String id, String name, TypeCode code);
 
-        const TypeCode& type() const;
+        const TypeCode& code() const;
 
         const String& id() const;
 
         const Type* parent() const;
 
         const TypeArray& children() const;
+
+        bool hasChild(Type* type) const;
 
         template <typename T>
         T* cast();
@@ -64,12 +47,12 @@ namespace Rt2::MetaData
     template <typename T>
     T* Type::cast()
     {
-        if (type() == T::id)
+        if (code() == T::id)
             return static_cast<T*>(this);
         return nullptr;
     }
 
-    inline const TypeCode& Type::type() const
+    inline const TypeCode& Type::code() const
     {
         return _code;
     }
