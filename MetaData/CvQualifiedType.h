@@ -4,7 +4,7 @@
 
 namespace Rt2::MetaData
 {
-    class CvQualifiedType : public Type
+    class CvQualifiedType final : public Type
     {
     public:
         static constexpr TypeCode id = CvQualifiedTypeTag;
@@ -22,6 +22,8 @@ namespace Rt2::MetaData
         uint8_t flags() const;
 
         Type* type() const;
+
+        bool isConst() const;
     };
 
     inline uint8_t CvQualifiedType::flags() const

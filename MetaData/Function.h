@@ -1,11 +1,11 @@
 #pragma once
 #include "MetaData/Location.h"
-#include "MetaData/Argument.h"
+#include "MetaData/ArgumentType.h"
 #include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
-    class Function final : public Type
+    class Function final : public ArgumentType
     {
     public:
         static constexpr TypeCode id = FunctionTag;
@@ -19,8 +19,6 @@ namespace Rt2::MetaData
 
         Location _location;
 
-        ArgumentListType _arguments;
-
     public:
         Function(const String& sId, const String& name, TypeCode code);
         ~Function() override = default;
@@ -30,8 +28,6 @@ namespace Rt2::MetaData
         uint8_t flags() const;
 
         Location* location();
-
-        ArgumentListType* arguments();
     };
 
     inline Type* Function::returns() const

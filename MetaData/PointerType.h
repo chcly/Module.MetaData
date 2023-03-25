@@ -27,6 +27,8 @@ namespace Rt2::MetaData
         size_t alignment() const;
 
         Type* type() const;
+
+        bool isConst() const;
     };
 
     inline size_t PointerType::sizeInBytes() const

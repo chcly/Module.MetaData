@@ -1,5 +1,5 @@
 #include "MetaData/Argument.h"
-
+#include "CvQualifiedType.h"
 #include "ReferenceType.h"
 #include "Utils/String.h"
 
@@ -21,19 +21,35 @@ namespace Rt2::MetaData
     {
         if (_type)
         {
-            if (_type->code() == ReferenceTypeTag)
+            if (_type->isTypeOf(ReferenceTypeTag))
             {
-                ReferenceType *ref = _type->cast<ReferenceType>();
+                const ReferenceType* ref = _type->cast<ReferenceType>();
+                return ref && ref->isConst();
+            }
+
+            if (_type->isTypeOf(CvQualifiedTypeTag))
+            {
+                const CvQualifiedType* ref = _type->cast<CvQualifiedType>();
                 return ref && ref->isConst();
             }
         }
-
-        return _type != nullptr && _type->code() == CvQualifiedTypeTag;
+        return false;
     }
 
     bool Argument::isPointer() const
     {
-        return _type != nullptr && _type->code() == PointerTypeTag;
+        if (_type)
+        {
+            if (_type->isTypeOf(ReferenceTypeTag))
+            {
+                const ReferenceType* ref = _type->cast<ReferenceType>();
+                return ref && ref->isPointer();
+            }
+
+            if (_type->isTypeOf(PointerTypeTag))
+                return true;
+        }
+        return false;
     }
 
     ArgumentListType::~ArgumentListType()
@@ -62,7 +78,7 @@ namespace Rt2::MetaData
 
     Argument* ArgumentListType::at(const uint32_t idx)
     {
-        if (idx <size())
+        if (idx < size())
             return _arguments.at(idx);
         return nullptr;
     }

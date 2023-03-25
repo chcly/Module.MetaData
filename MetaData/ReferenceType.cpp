@@ -1,5 +1,6 @@
 #include "MetaData/ReferenceType.h"
 #include "CvQualifiedType.h"
+#include "PointerType.h"
 #include "Utils/String.h"
 
 namespace Rt2::MetaData
@@ -16,8 +17,24 @@ namespace Rt2::MetaData
             if (_type->isTypeOf(CvQualifiedTypeTag))
             {
                 const CvQualifiedType* qt = _type->cast<CvQualifiedType>();
-                return qt && (qt->flags() & Const) != 0;
+                return qt && qt->isConst();
             }
+
+            if (_type->isTypeOf(PointerTypeTag))
+            {
+                const PointerType* obj = _type->cast<PointerType>();
+                return obj && obj->isConst();
+            }
+        }
+        return false;
+    }
+
+    bool ReferenceType::isPointer() const
+    {
+        if (_type)
+        {
+            if (_type->isTypeOf(PointerTypeTag))
+                return true;
         }
         return false;
     }

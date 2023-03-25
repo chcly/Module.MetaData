@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<CastXML format="1.3.1">
+  <Function id="_1" name="LinkOrder" returns="_2" context="_3" location="f1:1" file="f1" line="1" mangled="?LinkOrder@@YAPEAHAEAPEBM@Z">
+    <Argument name="b" type="_4" location="f1:1" file="f1" line="1"/>
+  </Function>
+  <PointerType id="_2" type="_5" size="64" align="64"/>
+  <ReferenceType id="_4" type="_6" size="64" align="64"/>
+  <Namespace id="_3" name="::"/>
+  <FundamentalType id="_5" name="int" size="32" align="32"/>
+  <PointerType id="_6" type="_7c" size="64" align="64"/>
+  <FundamentalType id="_7" name="float" size="32" align="32"/>
+  <CvQualifiedType id="_7c" type="_7" const="1"/>
+  <File id="f1" name="F:/Internal/repos/MetaData/Test/Source/File2.cpp"/>
+</CastXML>

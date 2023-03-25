@@ -29,6 +29,8 @@ namespace Rt2::MetaData
         Type* type() const;
 
         bool isConst() const;
+
+        bool  isPointer() const;
     };
 
     inline size_t ReferenceType::sizeInBytes() const

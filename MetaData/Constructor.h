@@ -1,11 +1,12 @@
 #pragma once
+#include "ArgumentType.h"
 #include "MetaData/Location.h"
 #include "Utils/String.h"
 #include "MetaData/Argument.h"
 
 namespace Rt2::MetaData
 {
-    class Constructor final : public Type
+    class Constructor final : public ArgumentType
     {
     public:
         static constexpr TypeCode id = ConstructorTag;
@@ -19,8 +20,6 @@ namespace Rt2::MetaData
 
         Location _location;
 
-        ArgumentListType _arguments;
-
     public:
         Constructor(const String& sId, const String& name, TypeCode code);
 
@@ -32,13 +31,7 @@ namespace Rt2::MetaData
 
         const Location* location() const;
 
-        const ArgumentListType* arguments() const;
-
-        bool hasArguments() const;
-
-        uint32_t argumentCount() const;
-
-        Argument* argument(uint32_t idx);
+        
     };
 
     inline AccessType Constructor::access() const

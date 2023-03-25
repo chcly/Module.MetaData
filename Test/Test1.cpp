@@ -5,6 +5,8 @@
 #include "MetaData/File.h"
 #include "MetaData/MetaFile.h"
 #include "MetaData/Namespace.h"
+#include "MetaData/ArgumentType.h"
+#include "MetaData/Function.h"
 #include "ThisDir.h"
 #include "Utils/Directory/Path.h"
 #include "gtest/gtest.h"
@@ -110,4 +112,40 @@ GTEST_TEST(MetaData, File_003)
     EXPECT_TRUE(arg0->isConst());
     EXPECT_TRUE(arg0->isReference());
     EXPECT_FALSE(arg0->isPointer());
+
+
+
+    Rt2::MetaData::Function* c5 = fp.find<Rt2::MetaData::Function>("_5");
+    EXPECT_NE(c5, nullptr);
+    EXPECT_TRUE(c5->hasArguments());
+    EXPECT_EQ(c5->argumentCount(), 1);
+
+
+    arg0 = c5->argument(0);
+    EXPECT_NE(arg0, nullptr);
+    EXPECT_FALSE(arg0->isConst());
+    EXPECT_TRUE(arg0->isReference());
+    EXPECT_TRUE(arg0->isPointer());
+}
+
+GTEST_TEST(MetaData, File_004)
+{
+    Rt2::MetaData::MetaFile fp;
+    Rt2::InputFileStream    ifs;
+    ifs.open(TestFile("File2.xml"));
+    EXPECT_TRUE(ifs.is_open());
+    EXPECT_NO_THROW({ fp.load(ifs); });
+
+    Rt2::MetaData::Function* c5 = fp.find<Rt2::MetaData::Function>("_1");
+    EXPECT_NE(c5, nullptr);
+    EXPECT_TRUE(c5->hasArguments());
+    EXPECT_EQ(c5->argumentCount(), 1);
+
+
+    
+    Rt2::MetaData::Argument *arg0 = c5->argument(0);
+    EXPECT_NE(arg0, nullptr);
+    EXPECT_TRUE(arg0->isConst());
+    EXPECT_TRUE(arg0->isReference());
+    EXPECT_TRUE(arg0->isPointer());
 }

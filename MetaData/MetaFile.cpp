@@ -205,7 +205,7 @@ namespace Rt2::MetaData
     void MetaFile::link(Function* obj, const Xml::Node* node)
     {
         linkLocation(obj->location(), node);
-        linkArgumentList(obj->arguments(), node);
+        linkArgumentList(&obj->_arguments, node);
 
         obj->_returns = find(node->attribute("returns"));
 
