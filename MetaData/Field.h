@@ -34,7 +34,7 @@ namespace Rt2::MetaData
 
         Location* location();
 
-        ContextType* context();
+        const ContextType &context() const;
     };
 
     inline AccessType Field::access() const

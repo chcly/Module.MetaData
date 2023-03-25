@@ -2,7 +2,6 @@
 #include "MetaData/Type.h"
 #include "Utils/HashMap.h"
 
-
 namespace Rt2::Xml
 {
     class Node;
@@ -17,10 +16,13 @@ namespace Rt2::MetaData
         using Types = std::unordered_map<String, Type*>;
 
     private:
-        Types          _types{};
-        FileArray      _files;
-        String         _format{};
-        NamespaceArray _namespaces;
+        friend class TypeListBuilder;
+
+        Types  _types{};
+        String _format{};
+        
+    template<typename T>
+    static ContextType* context(Type *type);
 
     public:
         MetaFile() = default;
@@ -34,19 +36,15 @@ namespace Rt2::MetaData
 
         Type* find(const String& id, TypeCode type);
 
-        template<typename  T>
+        template <typename T>
         T* find(const String& id);
 
-        const FileArray& files() const;
-
-        const NamespaceArray& namespaces() const;
+        TypeListBuilder list();
 
     private:
         Type* assert_find(const String& id);
 
-
         ContextType* context_find(const String& id);
-
 
         void clear();
 
@@ -91,15 +89,19 @@ namespace Rt2::MetaData
         void link(PointerType* obj, const Xml::Node* node);
 
         void link(CvQualifiedType* obj, const Xml::Node* node);
-
-        void link(File* obj, const Xml::Node* node);
-
+        
         void linkType(const Xml::Node* node);
 
         void loadImpl(const Xml::Node* node);
 
         static Type* create(const String& strId, const String& name, TypeCode id);
     };
+
+    template <typename T>
+    ContextType* MetaFile::context(Type* type)
+    {
+        return &type->assert_cast<T>()->_context;
+    }
 
     template <typename T>
     T* MetaFile::find(const String& id)
@@ -110,16 +112,6 @@ namespace Rt2::MetaData
     inline String MetaFile::format() const
     {
         return _format;
-    }
-
-    inline const FileArray& MetaFile::files() const
-    {
-        return _files;
-    }
-
-    inline const NamespaceArray& MetaFile::namespaces() const
-    {
-        return _namespaces;
     }
 
 }  // namespace Rt2::MetaData

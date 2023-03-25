@@ -14,8 +14,8 @@ namespace Rt2::MetaData
         return &_location;
     }
 
-    ContextType* Field::context()
+    const ContextType& Field::context() const
     {
-        return &_context;
+        return _context;
     }
 }  // namespace Rt2::MetaData

@@ -8,9 +8,12 @@
 #include "MetaData/Function.h"
 #include "MetaData/MetaFile.h"
 #include "MetaData/Namespace.h"
+#include "MetaData/TypeListBuilder.h"
 #include "ThisDir.h"
 #include "Utils/Directory/Path.h"
 #include "gtest/gtest.h"
+#include "MetaData/Struct.h"
+#include "MetaData/Typedef.h"
 
 using namespace Rt2;
 using namespace MetaData;
@@ -35,7 +38,7 @@ GTEST_TEST(MetaData, File_001)
         Namespace* ns = tc0->cast<Namespace>();
 
         EXPECT_NE(ns, nullptr);
-        //EXPECT_FALSE(ns->members().empty());
+        // EXPECT_FALSE(ns->members().empty());
     }
 
     Type* tc1 = fp.find("_3");
@@ -48,13 +51,13 @@ GTEST_TEST(MetaData, File_001)
         Console::println(st0->location()->readLine());
 
         EXPECT_NE(st0, nullptr);
-        //EXPECT_FALSE(st0->members().empty());
-        //EXPECT_EQ(st0->members().size(), 9);
+        // EXPECT_FALSE(st0->members().empty());
+        // EXPECT_EQ(st0->members().size(), 9);
 
-        //EXPECT_EQ(st0->sizeInBytes(), 32);
-        //EXPECT_EQ(st0->alignment(), 32);
-        //EXPECT_EQ(st0->context(), tc0);
-        //EXPECT_TRUE(st0->hasMember(st0));
+        // EXPECT_EQ(st0->sizeInBytes(), 32);
+        // EXPECT_EQ(st0->alignment(), 32);
+        // EXPECT_EQ(st0->context(), tc0);
+        // EXPECT_TRUE(st0->hasMember(st0));
     }
 
     Type* tc2 = fp.find("_6");
@@ -70,7 +73,7 @@ GTEST_TEST(MetaData, File_001)
         EXPECT_EQ(st0->offset(), 0);
         EXPECT_NE(st0->type(), nullptr);
 
-        EXPECT_EQ(st0->context()->type(), tc1);
+        EXPECT_EQ(st0->context().type(), ClassTag);
     }
 }
 
@@ -82,7 +85,10 @@ GTEST_TEST(MetaData, File_002)
     EXPECT_TRUE(ifs.is_open());
     EXPECT_NO_THROW({ fp.load(ifs); });
 
-    for (const auto* file : fp.files())
+    FileArray files;
+    fp.list().files(files);
+
+    for (const auto* file : files)
     {
         Directory::Path path(file->name());
         Console::println(path.base());
@@ -147,10 +153,55 @@ GTEST_TEST(MetaData, File_004)
     EXPECT_FALSE(al->empty());
     EXPECT_EQ(al->size(), 1);
 
-
     auto arg0 = al->at(0);
     EXPECT_NE(arg0, nullptr);
     EXPECT_TRUE(arg0->isConst());
     EXPECT_TRUE(arg0->isReference());
     EXPECT_TRUE(arg0->isPointer());
 }
+
+GTEST_TEST(MetaData, File_005)
+{
+    MetaFile        fp;
+    InputFileStream ifs;
+    ifs.open(TestFile("File1.xml"));
+    EXPECT_TRUE(ifs.is_open());
+    EXPECT_NO_THROW({ fp.load(ifs); });
+
+    ClassArray classes;
+    fp.list().classes(classes);
+    EXPECT_EQ(classes.size(), 1);
+    for (auto obj : classes)
+    {
+        Console::println(obj->name());
+        EXPECT_EQ(obj->context().type(), NamespaceTag);
+    }
+
+    NamespaceArray namespaces;
+    fp.list().namespaces(namespaces);
+    EXPECT_EQ(namespaces.size(), 2);
+    for (auto obj : namespaces)
+        Console::println(obj->name());
+
+    StructArray structs;
+    fp.list().structures(structs);
+    EXPECT_EQ(structs.size(), 1);
+    for (auto obj : structs)
+        Console::println(obj->name());
+
+    FunctionArray functions;
+    fp.list().functions(functions);
+    EXPECT_EQ(functions.size(), 1);
+    for (auto obj : functions)
+        Console::println(obj->name());
+
+    TypedefArray typedefs;
+    fp.list().typedefs(typedefs);
+    EXPECT_EQ(typedefs.size(), 0);
+    for (auto obj : typedefs)
+        Console::println(obj->name());
+}
+
+
+
+

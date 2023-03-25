@@ -17,6 +17,7 @@
 #include "MetaData/ReferenceType.h"
 #include "MetaData/Struct.h"
 #include "MetaData/Typedef.h"
+#include "TypeListBuilder.h"
 #include "Utils/Char.h"
 #include "Utils/StreamConverters/Hex.h"
 #include "Xml/File.h"
@@ -104,6 +105,11 @@ namespace Rt2::MetaData
         clear();
     }
 
+    TypeListBuilder MetaFile::list()
+    {
+        return TypeListBuilder(this);
+    }
+
     Type* MetaFile::assert_find(const String& id)
     {
         if (Type* val = find(id))
@@ -113,10 +119,11 @@ namespace Rt2::MetaData
 
     ContextType* MetaFile::context_find(const String& id)
     {
-        switch (Type* base = assert_find(id); base->code())
+        switch (Type* base = assert_find(id);
+                base->code())
         {
         case ClassTag:
-            return base->assert_cast<Class>()->context();
+            return context<Class>(base);
         case NamespaceTag:
             return base->assert_cast<Namespace>()->context();
         case FunctionTag:
@@ -124,7 +131,7 @@ namespace Rt2::MetaData
         case TypedefTag:
             return base->assert_cast<Typedef>()->context();
         case FieldTag:
-            return base->assert_cast<Field>()->context();
+            return context<Field>(base);
         case StructTag:
             return base->assert_cast<Struct>()->context();
         case DestructorTag:
@@ -145,6 +152,7 @@ namespace Rt2::MetaData
         case MaxTypeCode:
         case LocationTag:
         case MinTypeCode:
+        case NullCode:
         default:
             return nullptr;
         }
@@ -170,7 +178,7 @@ namespace Rt2::MetaData
 
     Type* MetaFile::find(const String& id, const TypeCode type)
     {
-        if (Type* obj = find(id); 
+        if (Type* obj = find(id);
             obj && obj->isTypeOf(type))
             return obj;
         return nullptr;
@@ -271,12 +279,11 @@ namespace Rt2::MetaData
     void MetaFile::link(Namespace* obj, const Xml::Node* node)
     {
         mergeMembers(obj->context(), node);
-        _namespaces.push_back(obj);
     }
 
     void MetaFile::link(Class* obj, const Xml::Node* node)
     {
-        mergeMembers(obj->context(), node);
+        mergeMembers(&obj->_context, node);
         linkLocation(obj->location(), node);
 
         obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
@@ -395,11 +402,6 @@ namespace Rt2::MetaData
         obj->_type = assert_find(node->attribute("type"));
     }
 
-    void MetaFile::link(File* obj, const Xml::Node* node)
-    {
-        _files.push_back(obj);
-    }
-
     void MetaFile::linkType(const Xml::Node* node)
     {
         if (!node)
@@ -434,9 +436,6 @@ namespace Rt2::MetaData
         case FundamentalTypeTag:
             link(type->assert_cast<FundamentalType>(), node);
             break;
-        case FileTag:
-            link(type->assert_cast<File>(), node);
-            break;
         case MethodTag:
             link(type->assert_cast<Method>(), node);
             break;
@@ -461,6 +460,7 @@ namespace Rt2::MetaData
         case FunctionTypeTag:
             link(type->assert_cast<FunctionType>(), node);
             break;
+        case FileTag:
         case LocationTag:
         case ArgumentTag:
         case MinTypeCode:

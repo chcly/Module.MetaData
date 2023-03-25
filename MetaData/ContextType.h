@@ -13,12 +13,7 @@ namespace Rt2::MetaData
         Type* _context{nullptr};
 
     public:
-        Type* type() const;
+        TypeCode type() const;
     };
-
-    inline Type* ContextType::type() const
-    {
-        return _context;
-    }
 
 }  // namespace Rt2::MetaData

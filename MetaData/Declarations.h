@@ -27,6 +27,8 @@ namespace Rt2::MetaData
 
         // non xml tags
         LocationTag,
+
+        NullCode
     };
 
     enum AccessType
@@ -77,9 +79,8 @@ namespace Rt2::MetaData
     class PointerType;
     class Location;
     class ArgumentListType;
+    class TypeListBuilder;
 
     using TypeArray      = SimpleArray<Type*>;
-    using FileArray      = SimpleArray<File*>;
-    using NamespaceArray = SimpleArray<Namespace*>;
 
 }  // namespace Rt2::MetaData
