@@ -26,7 +26,7 @@ endif()
 include(StaticRuntime)
 include(GTestUtils)
 include(ExternalTarget)
-include(CastXMLConfig)
+include(CastXmlConfig)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
