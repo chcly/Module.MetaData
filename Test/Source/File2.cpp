@@ -1,6 +1,8 @@
-int* LinkOrder(const float*& b)
+using CB = float* (*)();
+
+int* LinkOrder(const CB &Callback)
 {
     static int x;
-    x = int(*b);
+    x = int(*Callback());
     return &x;
 }
