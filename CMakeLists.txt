@@ -33,6 +33,10 @@ if (MetaData_ExternalTarget)
 else()
     add_subdirectory(CMake)
     add_subdirectory(Internal/Utils)
+    if (Utils_EXTRA_FLAGS)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${Utils_EXTRA_FLAGS}")
+    endif()    
+
     add_subdirectory(Internal/ParserBase)
     add_subdirectory(Internal/Xml)
 
