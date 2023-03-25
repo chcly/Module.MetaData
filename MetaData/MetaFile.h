@@ -1,7 +1,7 @@
 #pragma once
 #include "MetaData/Type.h"
 #include "Utils/HashMap.h"
-#include "Utils/String.h"
+
 
 namespace Rt2::Xml
 {
@@ -42,11 +42,17 @@ namespace Rt2::MetaData
         const NamespaceArray& namespaces() const;
 
     private:
+        Type* assert_find(const String& id);
+
+
+        ContextType* context_find(const String& id);
+
+
         void clear();
 
         void createType(const Xml::Node* node);
 
-        void mergeMembers(TypeArray& dest, const Xml::Node* node);
+        void mergeMembers(ContextType* dest, const Xml::Node* node);
 
         void linkArgument(ArgumentListType* obj, const Xml::Node* node);
 
@@ -54,13 +60,17 @@ namespace Rt2::MetaData
 
         void linkLocation(Location* obj, const Xml::Node* node);
 
-        void link(Type* obj, const Xml::Node* node);
+        void link(const Type* obj, const Xml::Node* node);
+
+        void link(Typedef* obj, const Xml::Node* node);
 
         void link(Namespace* obj, const Xml::Node* node);
 
         void link(Class* obj, const Xml::Node* node);
 
         void link(Function* obj, const Xml::Node* node);
+
+        void link(FunctionType* obj, const Xml::Node* node);
 
         void link(Struct* obj, const Xml::Node* node);
 

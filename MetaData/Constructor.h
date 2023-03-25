@@ -1,18 +1,17 @@
 #pragma once
-#include "ArgumentType.h"
+#include "MetaData/ArgumentList.h"
+#include "MetaData/ContextType.h"
 #include "MetaData/Location.h"
-#include "Utils/String.h"
-#include "MetaData/Argument.h"
 
 namespace Rt2::MetaData
 {
-    class Constructor final : public ArgumentType
+    class Constructor final : public Type
     {
     public:
         static constexpr TypeCode id = ConstructorTag;
 
     private:
-        friend class MetaFile;  // To define an access only API.
+        friend class MetaFile;  
 
         AccessType _access{UnknownTag};
 
@@ -20,10 +19,14 @@ namespace Rt2::MetaData
 
         Location _location;
 
+        ArgumentListType _arguments;
+
+        ContextType _context;
+
     public:
         Constructor(const String& sId, const String& name, TypeCode code);
 
-        ~Constructor() override;
+        ~Constructor() override = default;
 
         AccessType access() const;
 
@@ -31,7 +34,9 @@ namespace Rt2::MetaData
 
         const Location* location() const;
 
-        
+        ArgumentListType* arguments();
+
+        ContextType* context();
     };
 
     inline AccessType Constructor::access() const

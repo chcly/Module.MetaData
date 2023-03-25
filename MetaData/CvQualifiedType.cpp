@@ -1,5 +1,4 @@
 #include "MetaData/CvQualifiedType.h"
-#include "Utils/String.h"
 
 namespace Rt2::MetaData
 {

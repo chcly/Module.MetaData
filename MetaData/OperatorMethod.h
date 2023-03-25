@@ -1,7 +1,7 @@
 #pragma once
-#include "MetaData/Argument.h"
+#include "MetaData/ContextType.h"
+#include "MetaData/ArgumentList.h"
 #include "MetaData/Location.h"
-#include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
@@ -11,7 +11,7 @@ namespace Rt2::MetaData
         static constexpr TypeCode id = OperatorMethodTag;
 
     private:
-        friend class MetaFile;  // To define an access only API.
+        friend class MetaFile;  
 
         Type* _returns{nullptr};
 
@@ -22,6 +22,8 @@ namespace Rt2::MetaData
         Location _location;
 
         ArgumentListType _arguments;
+
+        ContextType      _context;
 
     public:
         OperatorMethod(const String& sId, const String& name, TypeCode code);
@@ -36,6 +38,8 @@ namespace Rt2::MetaData
         Location* location();
 
         ArgumentListType* arguments();
+
+        ContextType* context();
     };
 
     inline AccessType OperatorMethod::access() const

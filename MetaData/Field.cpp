@@ -1,9 +1,10 @@
 #include "MetaData/Field.h"
-#include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
-    Field::Field(const String& sId, const String& name, const TypeCode code) :
+    Field::Field(const String&  sId,
+                 const String&  name,
+                 const TypeCode code) :
         Type(sId, name, code)
     {
     }
@@ -11,5 +12,10 @@ namespace Rt2::MetaData
     Location* Field::location()
     {
         return &_location;
+    }
+
+    ContextType* Field::context()
+    {
+        return &_context;
     }
 }  // namespace Rt2::MetaData

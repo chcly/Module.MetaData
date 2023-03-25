@@ -1,6 +1,5 @@
 #include "MetaData/PointerType.h"
-#include "CvQualifiedType.h"
-#include "Utils/String.h"
+#include "MetaData/CvQualifiedType.h"
 
 namespace Rt2::MetaData
 {

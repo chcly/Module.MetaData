@@ -1,9 +1,10 @@
 #include "MetaData/File.h"
-#include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
-    File::File(const String& sId, const String& name, const TypeCode code) :
+    File::File(const String&  sId,
+               const String&  name,
+               const TypeCode code) :
         Type(sId, name, code)
     {
     }

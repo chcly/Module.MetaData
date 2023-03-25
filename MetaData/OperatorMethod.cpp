@@ -1,5 +1,4 @@
 #include "MetaData/OperatorMethod.h"
-#include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
@@ -16,5 +15,10 @@ namespace Rt2::MetaData
     ArgumentListType* OperatorMethod::arguments()
     {
         return &_arguments;
+    }
+
+    ContextType* OperatorMethod::context()
+    {
+        return &_context;
     }
 }  // namespace Rt2::MetaData

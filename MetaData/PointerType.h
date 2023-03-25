@@ -1,6 +1,5 @@
 #pragma once
 #include "MetaData/Type.h"
-#include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
@@ -10,7 +9,7 @@ namespace Rt2::MetaData
         static constexpr TypeCode id = PointerTypeTag;
 
     private:
-        friend class MetaFile;  // To define an access only API.
+        friend class MetaFile;  
 
         Type* _type{nullptr};
 

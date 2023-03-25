@@ -1,5 +1,4 @@
 #include "MetaData/Method.h"
-#include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
@@ -10,11 +9,16 @@ namespace Rt2::MetaData
 
     Location* Method::location()
     {
-        return  &_location;
+        return &_location;
     }
 
     ArgumentListType* Method::arguments()
     {
         return &_arguments;
+    }
+
+    ContextType* Method::context()
+    {
+        return &_context;
     }
 }  // namespace Rt2::MetaData

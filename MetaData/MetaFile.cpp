@@ -1,5 +1,6 @@
 #include "MetaData/MetaFile.h"
-#include "Argument.h"
+#include "MetaData/Argument.h"
+#include "MetaData/ArgumentList.h"
 #include "MetaData/Class.h"
 #include "MetaData/Constructor.h"
 #include "MetaData/CvQualifiedType.h"
@@ -7,15 +8,17 @@
 #include "MetaData/Field.h"
 #include "MetaData/File.h"
 #include "MetaData/Function.h"
+#include "MetaData/FunctionType.h"
 #include "MetaData/FundamentalType.h"
 #include "MetaData/Method.h"
 #include "MetaData/Namespace.h"
 #include "MetaData/OperatorMethod.h"
+#include "MetaData/PointerType.h"
+#include "MetaData/ReferenceType.h"
 #include "MetaData/Struct.h"
-#include "PointerType.h"
-#include "ReferenceType.h"
+#include "MetaData/Typedef.h"
 #include "Utils/Char.h"
-#include "Utils/String.h"
+#include "Utils/StreamConverters/Hex.h"
 #include "Xml/File.h"
 
 namespace Rt2::MetaData
@@ -26,6 +29,7 @@ namespace Rt2::MetaData
         {          "Class",           ClassTag},
         {         "Struct",          StructTag},
         {       "Function",        FunctionTag},
+        {   "FunctionType",    FunctionTypeTag},
         {    "Constructor",     ConstructorTag},
         {"CvQualifiedType", CvQualifiedTypeTag},
         {     "Destructor",      DestructorTag},
@@ -38,6 +42,7 @@ namespace Rt2::MetaData
         {  "ReferenceType",   ReferenceTypeTag},
         {    "PointerType",     PointerTypeTag},
         {       "Argument",        ArgumentTag},
+        {        "Typedef",         TypedefTag}
     };
 
     class AttributeConverter
@@ -69,12 +74,80 @@ namespace Rt2::MetaData
                 flags |= Const;
             return flags;
         }
+
+        static void specialName(const int64_t code, String& dest)
+        {
+            switch (code)
+            {
+            case PointerTypeTag:
+                dest = "*";
+                break;
+            case ReferenceTypeTag:
+                dest = "&";
+                break;
+            case CvQualifiedTypeTag:
+                dest = "const";
+                break;
+            case FunctionTypeTag:
+                dest = "(*)()";
+                break;
+            default:
+                dest = Su::join('<', Hex(code), '>');
+                break;
+            }
+        }
     };
     using Ac = AttributeConverter;
 
     MetaFile::~MetaFile()
     {
         clear();
+    }
+
+    Type* MetaFile::assert_find(const String& id)
+    {
+        if (Type* val = find(id))
+            return val;
+        throw Exception("assert_find failed to resolve: ", id);
+    }
+
+    ContextType* MetaFile::context_find(const String& id)
+    {
+        switch (Type* base = assert_find(id); base->code())
+        {
+        case ClassTag:
+            return base->assert_cast<Class>()->context();
+        case NamespaceTag:
+            return base->assert_cast<Namespace>()->context();
+        case FunctionTag:
+            return base->assert_cast<Function>()->context();
+        case TypedefTag:
+            return base->assert_cast<Typedef>()->context();
+        case FieldTag:
+            return base->assert_cast<Field>()->context();
+        case StructTag:
+            return base->assert_cast<Struct>()->context();
+        case DestructorTag:
+            return base->assert_cast<Destructor>()->context();
+        case MethodTag:
+            return base->assert_cast<Method>()->context();
+        case ConstructorTag:
+            return base->assert_cast<Constructor>()->context();
+        case OperatorMethodTag:
+            return base->assert_cast<OperatorMethod>()->context();
+        case FunctionTypeTag:
+        case CvQualifiedTypeTag:
+        case FundamentalTypeTag:
+        case FileTag:
+        case ReferenceTypeTag:
+        case PointerTypeTag:
+        case ArgumentTag:
+        case MaxTypeCode:
+        case LocationTag:
+        case MinTypeCode:
+        default:
+            return nullptr;
+        }
     }
 
     void MetaFile::clear()
@@ -95,11 +168,11 @@ namespace Rt2::MetaData
         return nullptr;
     }
 
-    Type* MetaFile::find(const String& id, TypeCode type)
+    Type* MetaFile::find(const String& id, const TypeCode type)
     {
-        if (Type* findResult = find(id);
-            findResult && findResult->isTypeOf(type))
-            return findResult;
+        if (Type* obj = find(id); 
+            obj && obj->isTypeOf(type))
+            return obj;
         return nullptr;
     }
 
@@ -112,7 +185,9 @@ namespace Rt2::MetaData
         if (id.empty())
             throw Exception("missing id attribute");
 
-        const String name = node->attribute("name");
+        String name = node->attribute("name");
+        if (name.empty())
+            Ac::specialName(node->type(), name);
 
         if (node->type() < MinTypeCode || node->type() > MaxTypeCode)
             throw Exception("invalid type code: ", node->type());
@@ -127,7 +202,7 @@ namespace Rt2::MetaData
         _types[type->id()] = type;
     }
 
-    void MetaFile::link(Type* obj, const Xml::Node* node)
+    void MetaFile::link(const Type* obj, const Xml::Node* node)
     {
         if (!obj || !node)
             throw Exception("invalid arguments");
@@ -135,14 +210,23 @@ namespace Rt2::MetaData
         if (String ctx = node->attribute("context");
             !ctx.empty())
         {
-            if (Type* ctxObj = find(ctx); ctxObj != nullptr)
-                ctxObj->addChild(obj);
+            ContextType* self = context_find(obj->id());
+            if (!self)
+                throw Exception("missing context ", obj->id());
+
+            if (Type* type = assert_find(ctx))
+                self->_context = type;
             else
                 Console::println("missing context member: ", ctx);
         }
     }
 
-    void MetaFile::mergeMembers(TypeArray& dest, const Xml::Node* node)
+    void MetaFile::link(Typedef* obj, const Xml::Node* node)
+    {
+        obj->_type = assert_find(node->attribute("type"));
+    }
+
+    void MetaFile::mergeMembers(ContextType* dest, const Xml::Node* node)
     {
         if (const String members = node->attribute("members");
             !members.empty())
@@ -152,8 +236,8 @@ namespace Rt2::MetaData
 
             for (const auto& link : memLink)
             {
-                if (Type* cacheType = find(link); cacheType != nullptr)
-                    dest.push_back(cacheType);
+                if (Type* cacheType = assert_find(link); cacheType != nullptr)
+                    dest->_members.push_back(cacheType);
                 else
                     Console::println("missing member: ", link);
             }
@@ -165,10 +249,8 @@ namespace Rt2::MetaData
         Argument* arg = obj->create();
         linkLocation(arg->location(), node);
 
-
-        arg->_type = find(node->attribute("type"));
+        arg->_type = assert_find(node->attribute("type"));
         arg->_name = node->attribute("name");
-
     }
 
     void MetaFile::linkArgumentList(ArgumentListType* obj, const Xml::Node* node)
@@ -188,13 +270,13 @@ namespace Rt2::MetaData
 
     void MetaFile::link(Namespace* obj, const Xml::Node* node)
     {
-        mergeMembers(obj->_members, node);
+        mergeMembers(obj->context(), node);
         _namespaces.push_back(obj);
     }
 
     void MetaFile::link(Class* obj, const Xml::Node* node)
     {
-        mergeMembers(obj->_members, node);
+        mergeMembers(obj->context(), node);
         linkLocation(obj->location(), node);
 
         obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
@@ -205,16 +287,21 @@ namespace Rt2::MetaData
     void MetaFile::link(Function* obj, const Xml::Node* node)
     {
         linkLocation(obj->location(), node);
-        linkArgumentList(&obj->_arguments, node);
+        linkArgumentList(obj->arguments(), node);
 
-        obj->_returns = find(node->attribute("returns"));
+        obj->_returns = assert_find(node->attribute("returns"));
 
         obj->_flags = Ac::flags(node);
     }
 
+    void MetaFile::link(FunctionType* obj, const Xml::Node* node)
+    {
+        obj->_returns = assert_find(node->attribute("returns"));
+    }
+
     void MetaFile::link(Struct* obj, const Xml::Node* node)
     {
-        mergeMembers(obj->_members, node);
+        mergeMembers(obj->context(), node);
         linkLocation(obj->location(), node);
 
         obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
@@ -230,13 +317,13 @@ namespace Rt2::MetaData
 
         obj->_access = Ac::access(node->attribute("access"));
 
-        obj->_type = find(node->attribute("type"));
+        obj->_type = assert_find(node->attribute("type"));
     }
 
     void MetaFile::link(Constructor* obj, const Xml::Node* node)
     {
         linkLocation(&obj->_location, node);
-        linkArgumentList(&obj->_arguments, node);
+        linkArgumentList(obj->arguments(), node);
 
         obj->_access = Ac::access(node->attribute("access"));
 
@@ -261,7 +348,7 @@ namespace Rt2::MetaData
 
         obj->_flags = Ac::flags(node);
 
-        obj->_returns = find(node->attribute("returns"));
+        obj->_returns = assert_find(node->attribute("returns"));
     }
 
     void MetaFile::link(OperatorMethod* obj, const Xml::Node* node)
@@ -273,7 +360,7 @@ namespace Rt2::MetaData
 
         obj->_flags = Ac::flags(node);
 
-        obj->_returns = find(node->attribute("returns"));
+        obj->_returns = assert_find(node->attribute("returns"));
     }
 
     void MetaFile::link(FundamentalType* obj, const Xml::Node* node)
@@ -289,7 +376,7 @@ namespace Rt2::MetaData
 
         obj->_align = Char::toUint64(node->attribute("align", "0"));
 
-        obj->_type = find(node->attribute("type"));
+        obj->_type = assert_find(node->attribute("type"));
     }
 
     void MetaFile::link(PointerType* obj, const Xml::Node* node)
@@ -298,14 +385,14 @@ namespace Rt2::MetaData
 
         obj->_align = Char::toUint64(node->attribute("align", "0"));
 
-        obj->_type = find(node->attribute("type"));
+        obj->_type = assert_find(node->attribute("type"));
     }
 
     void MetaFile::link(CvQualifiedType* obj, const Xml::Node* node)
     {
         obj->_flags = Ac::flags(node);
 
-        obj->_type = find(node->attribute("type"));
+        obj->_type = assert_find(node->attribute("type"));
     }
 
     void MetaFile::link(File* obj, const Xml::Node* node)
@@ -318,60 +405,61 @@ namespace Rt2::MetaData
         if (!node)
             throw Exception("invalid node");
 
-        Type* cacheType = find(node->attribute("id"));
+        Type* type = assert_find(node->attribute("id"));
+        if (type->code() != node->type())
+            throw Exception("type mismatch:", type->code(), ',', node->type());
 
-        // it must be the same, so check
-        if (!cacheType)
-            throw Exception("failed to find type:", node->attribute("id"));
-
-        if (cacheType->code() != node->type())
-            throw Exception("type mismatch:", cacheType->code(), ',', node->type());
-
-        link(cacheType, node);
+        link(type, node);
 
         switch ((TypeCode)node->type())
         {
         case NamespaceTag:
-            link(cacheType->cast<Namespace>(), node);
+            link(type->assert_cast<Namespace>(), node);
             break;
         case ClassTag:
-            link(cacheType->cast<Class>(), node);
+            link(type->assert_cast<Class>(), node);
             break;
         case FieldTag:
-            link(cacheType->cast<Field>(), node);
+            link(type->assert_cast<Field>(), node);
             break;
         case ConstructorTag:
-            link(cacheType->cast<Constructor>(), node);
+            link(type->assert_cast<Constructor>(), node);
             break;
         case CvQualifiedTypeTag:
-            link(cacheType->cast<CvQualifiedType>(), node);
+            link(type->assert_cast<CvQualifiedType>(), node);
             break;
         case DestructorTag:
-            link(cacheType->cast<Destructor>(), node);
+            link(type->assert_cast<Destructor>(), node);
             break;
         case FundamentalTypeTag:
-            link(cacheType->cast<FundamentalType>(), node);
+            link(type->assert_cast<FundamentalType>(), node);
             break;
         case FileTag:
-            link(cacheType->cast<File>(), node);
+            link(type->assert_cast<File>(), node);
             break;
         case MethodTag:
-            link(cacheType->cast<Method>(), node);
+            link(type->assert_cast<Method>(), node);
             break;
         case OperatorMethodTag:
-            link(cacheType->cast<OperatorMethod>(), node);
+            link(type->assert_cast<OperatorMethod>(), node);
             break;
         case ReferenceTypeTag:
-            link(cacheType->cast<ReferenceType>(), node);
+            link(type->assert_cast<ReferenceType>(), node);
             break;
         case PointerTypeTag:
-            link(cacheType->cast<PointerType>(), node);
+            link(type->assert_cast<PointerType>(), node);
             break;
         case FunctionTag:
-            link(cacheType->cast<Function>(), node);
+            link(type->assert_cast<Function>(), node);
             break;
         case StructTag:
-            link(cacheType->cast<Struct>(), node);
+            link(type->assert_cast<Struct>(), node);
+            break;
+        case TypedefTag:
+            link(type->assert_cast<Typedef>(), node);
+            break;
+        case FunctionTypeTag:
+            link(type->assert_cast<FunctionType>(), node);
             break;
         case LocationTag:
         case ArgumentTag:
@@ -425,6 +513,10 @@ namespace Rt2::MetaData
             return new Function(strId, name, id);
         case StructTag:
             return new Struct(strId, name, id);
+        case TypedefTag:
+            return new Typedef(strId, name, id);
+        case FunctionTypeTag:
+            return new FunctionType(strId, name, id);
         case ArgumentTag:
         case MinTypeCode:
         case LocationTag:

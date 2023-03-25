@@ -1,8 +1,6 @@
 #pragma once
-#include "MetaData/Location.h"
 #include "MetaData/Type.h"
 #include "Utils/Directory/Path.h"
-#include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
@@ -12,7 +10,7 @@ namespace Rt2::MetaData
         static constexpr TypeCode id = FileTag;
 
     private:
-        friend class MetaFile;  // To define an access only API.
+        friend class MetaFile;  
 
         StringArray _lines;
 

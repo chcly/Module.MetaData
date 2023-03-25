@@ -1,7 +1,10 @@
 #include "MetaData/Argument.h"
-#include "CvQualifiedType.h"
-#include "ReferenceType.h"
-#include "Utils/String.h"
+#include "MetaData/CvQualifiedType.h"
+#include "MetaData/Function.h"
+#include "MetaData/FunctionType.h"
+#include "MetaData/PointerType.h"
+#include "MetaData/ReferenceType.h"
+#include "MetaData/Typedef.h"
 
 namespace Rt2::MetaData
 {
@@ -12,79 +15,119 @@ namespace Rt2::MetaData
         return &_location;
     }
 
+    Type* Argument::search(const int code) const
+    {
+        Type* cur = _type;
+        while (cur != nullptr)
+        {
+            const int cc = cur->code();
+            if (cc == code)
+                return cur;
+            switch (cc)
+            {
+            case ReferenceTypeTag:
+                cur = cur->assert_cast<ReferenceType>()->type();
+                break;
+            case PointerTypeTag:
+                cur = cur->assert_cast<PointerType>()->type();
+                break;
+            case CvQualifiedTypeTag:
+                cur = cur->assert_cast<CvQualifiedType>()->type();
+                break;
+            case FunctionTypeTag:
+                cur = cur->assert_cast<FunctionType>()->returns();
+                break;
+            case FunctionTag:
+                cur = cur->assert_cast<Function>()->returns();
+                break;
+            case TypedefTag:
+                cur = cur->assert_cast<Typedef>()->type();
+                break;
+            case StructTag:
+            case ClassTag:
+            case FundamentalTypeTag:
+            default:
+                cur = nullptr;
+                break;
+            }
+        }
+        return nullptr;
+    }
+
     bool Argument::isReference() const
     {
-        return _type != nullptr && _type->code() == ReferenceTypeTag;
+        return search(ReferenceTypeTag) != nullptr;
     }
 
     bool Argument::isConst() const
     {
-        if (_type)
-        {
-            if (_type->isTypeOf(ReferenceTypeTag))
-            {
-                const ReferenceType* ref = _type->cast<ReferenceType>();
-                return ref && ref->isConst();
-            }
-
-            if (_type->isTypeOf(CvQualifiedTypeTag))
-            {
-                const CvQualifiedType* ref = _type->cast<CvQualifiedType>();
-                return ref && ref->isConst();
-            }
-        }
-        return false;
+        return search(CvQualifiedTypeTag) != nullptr;
     }
 
     bool Argument::isPointer() const
     {
-        if (_type)
+        return search(PointerTypeTag) != nullptr;
+    }
+
+    bool Argument::isFunctionPointer() const
+    {
+        return isPointer() && search(FunctionTypeTag) != nullptr;
+    }
+
+    void enqueue(ArgumentQueue& dest, Type* key, bool& front)
+    {
+        if (front)
+            dest.push_front(key);
+        else
+            dest.push_back(key);
+
+        front = false;
+    }
+
+    void Argument::expand(ArgumentQueue& dest) const
+    {
+        Type* cur   = _type;
+        bool  front = false;
+        while (cur != nullptr)
         {
-            if (_type->isTypeOf(ReferenceTypeTag))
+            switch ((int)cur->code())
             {
-                const ReferenceType* ref = _type->cast<ReferenceType>();
-                return ref && ref->isPointer();
+            case ReferenceTypeTag:
+                enqueue(dest, cur, front);
+                cur = cur->assert_cast<ReferenceType>()->type();
+                break;
+            case PointerTypeTag:
+                enqueue(dest, cur, front);
+                cur = cur->assert_cast<PointerType>()->type();
+                break;
+            case CvQualifiedTypeTag:
+                enqueue(dest, cur, front);
+                cur = cur->assert_cast<CvQualifiedType>()->type();
+                break;
+            case FunctionTypeTag:
+                if (dest.back()->isTypeOf(PointerTypeTag))
+                    dest.pop_back();
+                enqueue(dest, cur, front);
+                cur = cur->assert_cast<FunctionType>()->returns();
+                break;
+            case FunctionTag:
+                enqueue(dest, cur, front);
+                cur = cur->assert_cast<Function>()->returns();
+                break;
+            case TypedefTag:
+                enqueue(dest, cur, front);
+                cur = cur->assert_cast<Typedef>()->type();
+                break;
+            case StructTag:
+            case ClassTag:
+            case FundamentalTypeTag:
+                enqueue(dest, cur, front);
+                cur = nullptr;
+                break;
+            default:
+                cur = nullptr;
+                break;
             }
-
-            if (_type->isTypeOf(PointerTypeTag))
-                return true;
         }
-        return false;
-    }
-
-    ArgumentListType::~ArgumentListType()
-    {
-        for (const auto arg : _arguments)
-            delete arg;
-        _arguments.clear();
-    }
-
-    Argument* ArgumentListType::create()
-    {
-        Argument* arg = new Argument();
-        _arguments.push_back(arg);
-        return arg;
-    }
-
-    const ArgumentList& ArgumentListType::list() const
-    {
-        return _arguments;
-    }
-
-    uint32_t ArgumentListType::size() const
-    {
-        return _arguments.size();
-    }
-
-    Argument* ArgumentListType::at(const uint32_t idx)
-    {
-        if (idx < size())
-            return _arguments.at(idx);
-        return nullptr;
-    }
-
-    bool ArgumentListType::empty() const
-    {
-        return _arguments.empty();
     }
 }  // namespace Rt2::MetaData

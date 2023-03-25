@@ -1,6 +1,5 @@
 #pragma once
 #include "MetaData/Type.h"
-#include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
@@ -10,7 +9,7 @@ namespace Rt2::MetaData
         static constexpr TypeCode id = ReferenceTypeTag;
 
     private:
-        friend class MetaFile;  // To define an access only API.
+        friend class MetaFile;
 
         Type* _type{nullptr};
 
@@ -30,7 +29,7 @@ namespace Rt2::MetaData
 
         bool isConst() const;
 
-        bool  isPointer() const;
+        bool isPointer() const;
     };
 
     inline size_t ReferenceType::sizeInBytes() const

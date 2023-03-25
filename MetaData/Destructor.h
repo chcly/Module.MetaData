@@ -1,6 +1,6 @@
 #pragma once
+#include "MetaData/ContextType.h"
 #include "MetaData/Location.h"
-#include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
@@ -10,13 +10,15 @@ namespace Rt2::MetaData
         static constexpr TypeCode id = DestructorTag;
 
     private:
-        friend class MetaFile;  // To define an access only API.
+        friend class MetaFile;
 
         AccessType _access{UnknownTag};
 
         uint8_t _flags{NoFlags};
 
         Location _location;
+
+        ContextType _context;
 
     public:
         Destructor(const String& sId, const String& name, TypeCode code);
@@ -26,9 +28,9 @@ namespace Rt2::MetaData
 
         uint8_t flags() const;
 
+        Location* location();
 
-        
-    Location* location();
+        ContextType* context();
     };
 
     inline AccessType Destructor::access() const

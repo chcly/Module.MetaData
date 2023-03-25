@@ -1,6 +1,6 @@
 #pragma once
+#include "MetaData/ContextType.h"
 #include "MetaData/Location.h"
-#include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
@@ -10,7 +10,7 @@ namespace Rt2::MetaData
         static constexpr TypeCode id = FieldTag;
 
     private:
-        friend class MetaFile;  // To define an access only API.
+        friend class MetaFile;  
 
         AccessType _access{PrivateTag};
 
@@ -19,6 +19,8 @@ namespace Rt2::MetaData
         Type* _type{nullptr};
 
         Location _location;
+
+        ContextType _context;
 
     public:
         Field(const String& sId, const String& name, TypeCode code);
@@ -31,6 +33,8 @@ namespace Rt2::MetaData
         Type* type() const;
 
         Location* location();
+
+        ContextType* context();
     };
 
     inline AccessType Field::access() const

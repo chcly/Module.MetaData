@@ -1,23 +1,27 @@
 #pragma once
+#include "MetaData/ContextType.h"
+#include "MetaData/ArgumentList.h"
 #include "MetaData/Location.h"
-#include "MetaData/ArgumentType.h"
-#include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
-    class Function final : public ArgumentType
+    class Function final : public Type
     {
     public:
         static constexpr TypeCode id = FunctionTag;
 
     private:
-        friend class MetaFile;  // To define an access only API.
+        friend class MetaFile;  
 
         Type* _returns{nullptr};
 
         uint8_t _flags{NoFlags};
 
         Location _location;
+
+        ArgumentListType _arguments;
+
+        ContextType _context;
 
     public:
         Function(const String& sId, const String& name, TypeCode code);
@@ -28,6 +32,10 @@ namespace Rt2::MetaData
         uint8_t flags() const;
 
         Location* location();
+
+        ArgumentListType* arguments();
+
+        ContextType* context();
     };
 
     inline Type* Function::returns() const

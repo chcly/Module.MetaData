@@ -1,13 +1,12 @@
 #pragma once
 #include "MetaData/Type.h"
-#include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
     class Location
     {
     private:
-        friend class MetaFile;  // To define an access only API.
+        friend class MetaFile;
 
         File* _file{nullptr};
 
@@ -15,6 +14,7 @@ namespace Rt2::MetaData
 
     public:
         Location() = default;
+
         ~Location() = default;
 
         File* file() const;

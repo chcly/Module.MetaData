@@ -1,6 +1,6 @@
 #pragma once
+#include "MetaData/ContextType.h"
 #include "MetaData/Location.h"
-#include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
@@ -10,7 +10,7 @@ namespace Rt2::MetaData
         static constexpr TypeCode id = StructTag;
 
     private:
-        friend class MetaFile;  // To define an access only API.
+        friend class MetaFile;  
 
         size_t _sizeInBytes{0};
         size_t _align{0};
@@ -18,6 +18,8 @@ namespace Rt2::MetaData
         TypeArray _members;
 
         Location _location;
+
+        ContextType _context;
 
     public:
         Struct(const String& sId, const String& name, TypeCode code);
@@ -30,6 +32,8 @@ namespace Rt2::MetaData
         const TypeArray& members() const;
 
         Location* location();
+
+        ContextType* context();
     };
 
     inline size_t Struct::sizeInBytes() const

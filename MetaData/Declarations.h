@@ -8,11 +8,13 @@ namespace Rt2::MetaData
         MinTypeCode,
         ClassTag,
         FunctionTag,
+        FunctionTypeTag,
         StructTag,
         ConstructorTag,
         CvQualifiedTypeTag,
         DestructorTag,
         FieldTag,
+        TypedefTag,
         FundamentalTypeTag,
         FileTag,
         MethodTag,
@@ -55,9 +57,12 @@ namespace Rt2::MetaData
     };
 
     class Type;
+    class ContextType;
+    class Typedef;
     class Class;
     class Struct;
     class Function;
+    class FunctionType;
     class Argument;
     class Constructor;
     class CvQualifiedType;
@@ -76,6 +81,5 @@ namespace Rt2::MetaData
     using TypeArray      = SimpleArray<Type*>;
     using FileArray      = SimpleArray<File*>;
     using NamespaceArray = SimpleArray<Namespace*>;
-    using ArgumentList   = SimpleArray<Argument*>;
 
 }  // namespace Rt2::MetaData
