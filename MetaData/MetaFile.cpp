@@ -1,4 +1,5 @@
 #include "MetaData/MetaFile.h"
+#include "Argument.h"
 #include "MetaData/Class.h"
 #include "MetaData/Constructor.h"
 #include "MetaData/CvQualifiedType.h"
@@ -64,6 +65,8 @@ namespace Rt2::MetaData
                 flags |= Explicit;
             if (node->attribute("artificial", "0") == "1")
                 flags |= Artificial;
+            if (node->attribute("const", "0") == "1")
+                flags |= Const;
             return flags;
         }
     };
@@ -76,8 +79,8 @@ namespace Rt2::MetaData
 
     void MetaFile::clear()
     {
-        for (const auto& type : _types)
-            delete type.second;
+        for (const auto& [key, value] : _types)
+            delete value;
         _types.clear();
     }
 
@@ -85,9 +88,9 @@ namespace Rt2::MetaData
     {
         if (!id.empty())
         {
-            if (const size_t pos = _types.find(id);
-                pos != Npos)
-                return _types.at(pos);
+            if (const Types::iterator it = _types.find(id);
+                it != _types.end())
+                return it->second;
         }
         return nullptr;
     }
@@ -118,10 +121,10 @@ namespace Rt2::MetaData
         if (type == nullptr)
             throw Exception("failed to create a usable type instance for: ", id);
 
-        if (_types.find(type->id()) != Npos)
+        if (_types.find(type->id()) != _types.end())
             throw Exception("duplicate id found: ", id);
 
-        _types.insert(type->id(), type);
+        _types[type->id()] = type;
     }
 
     void MetaFile::link(Type* obj, const Xml::Node* node)
@@ -157,6 +160,26 @@ namespace Rt2::MetaData
         }
     }
 
+    void MetaFile::linkArgument(ArgumentListType* obj, const Xml::Node* node)
+    {
+        Argument* arg = obj->create();
+        linkLocation(arg->location(), node);
+
+
+        arg->_type = find(node->attribute("type"));
+        arg->_name = node->attribute("name");
+
+    }
+
+    void MetaFile::linkArgumentList(ArgumentListType* obj, const Xml::Node* node)
+    {
+        for (const Xml::Node* chi : node->children())
+        {
+            if (chi->isTypeOf(ArgumentTag))
+                linkArgument(obj, chi);
+        }
+    }
+
     void MetaFile::linkLocation(Location* obj, const Xml::Node* node)
     {
         obj->_file = find<File>(node->attribute("file"));
@@ -166,12 +189,13 @@ namespace Rt2::MetaData
     void MetaFile::link(Namespace* obj, const Xml::Node* node)
     {
         mergeMembers(obj->_members, node);
+        _namespaces.push_back(obj);
     }
 
     void MetaFile::link(Class* obj, const Xml::Node* node)
     {
         mergeMembers(obj->_members, node);
-        linkLocation(obj, node);
+        linkLocation(obj->location(), node);
 
         obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
 
@@ -180,7 +204,8 @@ namespace Rt2::MetaData
 
     void MetaFile::link(Function* obj, const Xml::Node* node)
     {
-        linkLocation(obj, node);
+        linkLocation(obj->location(), node);
+        linkArgumentList(obj->arguments(), node);
 
         obj->_returns = find(node->attribute("returns"));
 
@@ -190,8 +215,7 @@ namespace Rt2::MetaData
     void MetaFile::link(Struct* obj, const Xml::Node* node)
     {
         mergeMembers(obj->_members, node);
-
-        linkLocation(obj, node);
+        linkLocation(obj->location(), node);
 
         obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
 
@@ -200,7 +224,7 @@ namespace Rt2::MetaData
 
     void MetaFile::link(Field* obj, const Xml::Node* node)
     {
-        linkLocation(obj, node);
+        linkLocation(obj->location(), node);
 
         obj->_offset = Char::toUint64(node->attribute("offset", "0"));
 
@@ -211,7 +235,8 @@ namespace Rt2::MetaData
 
     void MetaFile::link(Constructor* obj, const Xml::Node* node)
     {
-        linkLocation(obj, node);
+        linkLocation(&obj->_location, node);
+        linkArgumentList(&obj->_arguments, node);
 
         obj->_access = Ac::access(node->attribute("access"));
 
@@ -220,7 +245,7 @@ namespace Rt2::MetaData
 
     void MetaFile::link(Destructor* obj, const Xml::Node* node)
     {
-        linkLocation(obj, node);
+        linkLocation(obj->location(), node);
 
         obj->_access = Ac::access(node->attribute("access"));
 
@@ -229,7 +254,8 @@ namespace Rt2::MetaData
 
     void MetaFile::link(Method* obj, const Xml::Node* node)
     {
-        linkLocation(obj, node);
+        linkLocation(obj->location(), node);
+        linkArgumentList(obj->arguments(), node);
 
         obj->_access = Ac::access(node->attribute("access"));
 
@@ -240,7 +266,8 @@ namespace Rt2::MetaData
 
     void MetaFile::link(OperatorMethod* obj, const Xml::Node* node)
     {
-        linkLocation(obj, node);
+        linkLocation(obj->location(), node);
+        linkArgumentList(obj->arguments(), node);
 
         obj->_access = Ac::access(node->attribute("access"));
 
@@ -346,6 +373,7 @@ namespace Rt2::MetaData
         case StructTag:
             link(cacheType->cast<Struct>(), node);
             break;
+        case LocationTag:
         case ArgumentTag:
         case MinTypeCode:
         case MaxTypeCode:
@@ -399,6 +427,7 @@ namespace Rt2::MetaData
             return new Struct(strId, name, id);
         case ArgumentTag:
         case MinTypeCode:
+        case LocationTag:
         case MaxTypeCode:
         default:
             return nullptr;

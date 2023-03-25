@@ -4,7 +4,7 @@
 
 namespace Rt2::MetaData
 {
-    class Namespace : public Type
+    class Namespace final : public Type
     {
     public:
         static constexpr TypeCode id = NamespaceTag;
@@ -16,6 +16,7 @@ namespace Rt2::MetaData
 
     public:
         Namespace(const String& sId, const String& name, TypeCode code);
+        ~Namespace() override = default;
 
         const TypeArray& members() const;
     };

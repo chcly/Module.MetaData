@@ -1,14 +1,20 @@
 set(TestTargetName ${TargetName}Test)
 include(TestDirectory)
-include(${CMAKE_CURRENT_SOURCE_DIR}/Transformer.cmake)
+include(CastXmlConfig)
+
+set(From_CSV "ClassA,File1")
+extract_source(SRC ${CMAKE_CURRENT_SOURCE_DIR}/Source/)
+compile_and_transfer(XML ${CMAKE_CURRENT_SOURCE_DIR} ${From_CSV} ${SRC})
+
 
 
 gen_path_to_here()
 
-set(TestTarget_SRC
-    Test1.cpp
-    Transformer.cmake
-
+set_group(TestTarget_SRC
+    Source:Test1.cpp
+    Source/TestLib:Source/*.cpp
+    Header/TestLib:Source/*.h
+    Header/TestLib:${XML}
 )
 
 include_directories(
@@ -22,6 +28,7 @@ include_directories(
 add_executable(
     ${TestTargetName}
     ${TestTarget_SRC}
+    ${XML}
 )
 target_link_libraries(
     ${TestTargetName} 

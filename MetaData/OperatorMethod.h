@@ -1,10 +1,11 @@
 #pragma once
+#include "MetaData/Argument.h"
 #include "MetaData/Location.h"
 #include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
-    class OperatorMethod : public Location
+    class OperatorMethod final : public Type
     {
     public:
         static constexpr TypeCode id = OperatorMethodTag;
@@ -18,14 +19,23 @@ namespace Rt2::MetaData
 
         AccessType _access{UnknownTag};
 
+        Location _location;
+
+        ArgumentListType _arguments;
+
     public:
         OperatorMethod(const String& sId, const String& name, TypeCode code);
+        ~OperatorMethod() override = default;
 
         AccessType access() const;
 
         Type* returns() const;
 
         uint8_t flags() const;
+
+        Location* location();
+
+        ArgumentListType* arguments();
     };
 
     inline AccessType OperatorMethod::access() const

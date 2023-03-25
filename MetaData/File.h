@@ -6,7 +6,7 @@
 
 namespace Rt2::MetaData
 {
-    class File : public Type
+    class File final : public Type
     {
     public:
         static constexpr TypeCode id = FileTag;
@@ -18,7 +18,7 @@ namespace Rt2::MetaData
 
     public:
         File(const String& sId, const String& name, TypeCode code);
-        ~File();
+        ~File() override;
 
         Directory::Path path() const;
 

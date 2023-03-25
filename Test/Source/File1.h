@@ -22,8 +22,8 @@ namespace File1
 
     struct Wrapper
     {
-        int y;
+        unsigned int y;
     };
 
-    extern Wrapper Foo(ClassA* ref);
+    extern Wrapper Foo(ClassA*& ref);
 }  // namespace File1

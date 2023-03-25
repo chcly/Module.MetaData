@@ -4,7 +4,7 @@
 
 namespace Rt2::MetaData
 {
-    class Struct : public Location
+    class Struct final : public Type
     {
     public:
         static constexpr TypeCode id = StructTag;
@@ -17,14 +17,19 @@ namespace Rt2::MetaData
 
         TypeArray _members;
 
+        Location _location;
+
     public:
         Struct(const String& sId, const String& name, TypeCode code);
+        ~Struct() override = default;
 
         size_t sizeInBytes() const;
 
         size_t alignment() const;
 
         const TypeArray& members() const;
+
+        Location* location();
     };
 
     inline size_t Struct::sizeInBytes() const

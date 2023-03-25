@@ -2,7 +2,11 @@
 #include "MetaData/Type.h"
 #include "Utils/HashMap.h"
 #include "Utils/String.h"
-#include "Xml/Node.h"
+
+namespace Rt2::Xml
+{
+    class Node;
+}
 
 namespace Rt2::MetaData
 {
@@ -10,7 +14,7 @@ namespace Rt2::MetaData
     class MetaFile
     {
     public:
-        using Types = HashTable<String, Type*>;
+        using Types = std::unordered_map<String, Type*>;
 
     private:
         Types          _types{};
@@ -43,6 +47,10 @@ namespace Rt2::MetaData
         void createType(const Xml::Node* node);
 
         void mergeMembers(TypeArray& dest, const Xml::Node* node);
+
+        void linkArgument(ArgumentListType* obj, const Xml::Node* node);
+
+        void linkArgumentList(ArgumentListType* obj, const Xml::Node* node);
 
         void linkLocation(Location* obj, const Xml::Node* node);
 

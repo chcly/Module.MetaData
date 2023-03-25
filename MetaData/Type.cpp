@@ -10,6 +10,12 @@ namespace Rt2::MetaData
     {
     }
 
+    Type::~Type()
+    {
+        _children.clear();
+        _parent = nullptr;
+    }
+
 
     bool Type::hasChild(Type* type) const
     {

@@ -4,7 +4,7 @@
 
 namespace Rt2::MetaData
 {
-    class ReferenceType : public Type
+    class ReferenceType final : public Type
     {
     public:
         static constexpr TypeCode id = ReferenceTypeTag;
@@ -20,12 +20,15 @@ namespace Rt2::MetaData
 
     public:
         ReferenceType(const String& sId, const String& name, TypeCode code);
+        ~ReferenceType() override = default;
 
         size_t sizeInBytes() const;
 
         size_t alignment() const;
 
         Type* type() const;
+
+        bool isConst() const;
     };
 
     inline size_t ReferenceType::sizeInBytes() const

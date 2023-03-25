@@ -1,11 +1,11 @@
 #pragma once
-#include "Location.h"
+#include "MetaData/Location.h"
 #include "MetaData/Type.h"
 #include "Utils/String.h"
 
 namespace Rt2::MetaData
 {
-    class Class : public Location
+    class Class final : public Type
     {
     public:
         static constexpr TypeCode id = ClassTag;
@@ -18,16 +18,22 @@ namespace Rt2::MetaData
         size_t _align{0};
 
         TypeArray _members;
-        
+
+        Location  _location;
 
     public:
         Class(const String& sId, const String& name, TypeCode code);
+        ~Class() override;
 
         size_t sizeInBytes() const;
 
         size_t alignment() const;
 
         const TypeArray& members() const;
+
+        Location* location();
+
+
     };
 
     inline size_t Class::sizeInBytes() const

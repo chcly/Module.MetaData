@@ -4,7 +4,7 @@
 
 namespace Rt2::MetaData
 {
-    class PointerType : public Type
+    class PointerType final : public Type
     {
     public:
         static constexpr TypeCode id = PointerTypeTag;
@@ -20,6 +20,7 @@ namespace Rt2::MetaData
 
     public:
         PointerType(const String& sId, const String& name, TypeCode code);
+        ~PointerType() override = default;
 
         size_t sizeInBytes() const;
 

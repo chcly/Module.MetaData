@@ -4,7 +4,7 @@
 
 namespace Rt2::MetaData
 {
-    class FundamentalType : public Type
+    class FundamentalType final : public Type
     {
     public:
         static constexpr TypeCode id = FundamentalTypeTag;
@@ -18,6 +18,7 @@ namespace Rt2::MetaData
 
     public:
         FundamentalType(const String& sId, const String& name, TypeCode code);
+        ~FundamentalType() override = default;
 
         size_t sizeInBytes() const;
 

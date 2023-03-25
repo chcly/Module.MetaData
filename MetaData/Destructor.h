@@ -4,7 +4,7 @@
 
 namespace Rt2::MetaData
 {
-    class Destructor : public Location
+    class Destructor final : public Type
     {
     public:
         static constexpr TypeCode id = DestructorTag;
@@ -16,12 +16,19 @@ namespace Rt2::MetaData
 
         uint8_t _flags{NoFlags};
 
+        Location _location;
+
     public:
         Destructor(const String& sId, const String& name, TypeCode code);
+        ~Destructor() override = default;
 
         AccessType access() const;
 
         uint8_t flags() const;
+
+
+        
+    Location* location();
     };
 
     inline AccessType Destructor::access() const

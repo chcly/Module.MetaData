@@ -4,7 +4,7 @@
 
 namespace Rt2::MetaData
 {
-    class Field : public Location
+    class Field final : public Type
     {
     public:
         static constexpr TypeCode id = FieldTag;
@@ -18,14 +18,19 @@ namespace Rt2::MetaData
 
         Type* _type{nullptr};
 
+        Location _location;
+
     public:
         Field(const String& sId, const String& name, TypeCode code);
+        ~Field() override = default;
 
         AccessType access() const;
 
         size_t offset() const;
 
-        inline Type* type() const;
+        Type* type() const;
+
+        Location* location();
     };
 
     inline AccessType Field::access() const

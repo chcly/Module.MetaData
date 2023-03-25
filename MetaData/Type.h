@@ -29,6 +29,7 @@ namespace Rt2::MetaData
 
     public:
         explicit Type(String hash, String name, TypeCode code);
+        virtual ~Type();
 
         const TypeCode& code() const;
 

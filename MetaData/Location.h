@@ -4,11 +4,8 @@
 
 namespace Rt2::MetaData
 {
-    class Location : public Type
+    class Location
     {
-    public:
-        static constexpr TypeCode id = LocationTag;
-
     private:
         friend class MetaFile;  // To define an access only API.
 
@@ -17,7 +14,8 @@ namespace Rt2::MetaData
         size_t _line{0};
 
     public:
-        Location(const String& sId, const String& name, TypeCode code);
+        Location() = default;
+        ~Location() = default;
 
         File* file() const;
 

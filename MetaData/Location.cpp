@@ -5,11 +5,7 @@
 
 namespace Rt2::MetaData
 {
-    Location::Location(const String& sId, const String& name, const TypeCode code) :
-        Type(sId, name, code)
-    {
-    }
-
+    
     String Location::readLine() const
     {
         if (_file)

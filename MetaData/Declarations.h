@@ -51,6 +51,7 @@ namespace Rt2::MetaData
         Extern     = 0x02,
         Artificial = 0x04,
         Explicit   = 0x08,
+        Const      = 0x10,
     };
 
     class Type;
@@ -70,9 +71,11 @@ namespace Rt2::MetaData
     class ReferenceType;
     class PointerType;
     class Location;
+    class ArgumentListType;
 
     using TypeArray      = SimpleArray<Type*>;
     using FileArray      = SimpleArray<File*>;
     using NamespaceArray = SimpleArray<Namespace*>;
+    using ArgumentList   = SimpleArray<Argument*>;
 
 }  // namespace Rt2::MetaData

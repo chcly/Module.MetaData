@@ -32,7 +32,7 @@ function(compile_and_transfer RESULT TRANSFER_TO_DIR CSV)
                 
         add_custom_command(
 	        OUTPUT  ${OUTPUT_SRC}
-	        COMMENT "${SRC_NAME}.xml"
+	        COMMENT "Compiling ${SRC_NAME}.xml"
 	        COMMAND ${CastXML_EXE} 
                                --castxml-start "${CSV}"
                                --castxml-output=${CastXML_VERSION} 
@@ -45,7 +45,7 @@ function(compile_and_transfer RESULT TRANSFER_TO_DIR CSV)
 
         add_custom_command(
 	        OUTPUT  ${TRANSFR_SRC}
-	        COMMENT "Transfer ${SRC_NAME}.xml"
+	        COMMENT "Transferring ${SRC_NAME}.xml"
 	        COMMAND ${CMAKE_COMMAND} -E copy
                     ${OUTPUT_SRC}
                     ${TRANSFR_SRC}
