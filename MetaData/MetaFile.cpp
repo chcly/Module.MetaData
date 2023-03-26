@@ -3,6 +3,7 @@
 #include "MetaData/ArgumentList.h"
 #include "MetaData/Class.h"
 #include "MetaData/Constructor.h"
+#include "MetaData/Converter.h"
 #include "MetaData/CvQualifiedType.h"
 #include "MetaData/Destructor.h"
 #include "MetaData/Field.h"
@@ -32,6 +33,7 @@ namespace Rt2::MetaData
         {       "Function",        FunctionTag},
         {   "FunctionType",    FunctionTypeTag},
         {    "Constructor",     ConstructorTag},
+        {      "Converter",       ConverterTag},
         {"CvQualifiedType", CvQualifiedTypeTag},
         {     "Destructor",      DestructorTag},
         {          "Field",           FieldTag},
@@ -329,6 +331,15 @@ namespace Rt2::MetaData
         obj->_flags = Ac::flags(node);
     }
 
+    void MetaFile::link(Converter* obj, const Xml::Node* node)
+    {
+        linkLocation(&obj->_location, node);
+
+        obj->_access = Ac::access(node->attribute("access"));
+
+        obj->_flags = Ac::flags(node);
+    }
+
     void MetaFile::link(Destructor* obj, const Xml::Node* node)
     {
         linkLocation(obj->location(), node);
@@ -430,6 +441,9 @@ namespace Rt2::MetaData
         case FundamentalTypeTag:
             link(type->assert_cast<FundamentalType>(), node);
             break;
+        case ConverterTag:
+            link(type->assert_cast<Converter>(), node);
+            break;
         case MethodTag:
             link(type->assert_cast<Method>(), node);
             break;
@@ -490,6 +504,8 @@ namespace Rt2::MetaData
             return context<Constructor>(base);
         case OperatorMethodTag:
             return context<OperatorMethod>(base);
+        case ConverterTag:
+            return context<Converter>(base);
         case FunctionTypeTag:
         case CvQualifiedTypeTag:
         case FundamentalTypeTag:
@@ -542,6 +558,8 @@ namespace Rt2::MetaData
             return new Typedef(strId, name, id);
         case FunctionTypeTag:
             return new FunctionType(strId, name, id);
+        case ConverterTag:
+            return new Converter(strId, name, id);
         case ArgumentTag:
         case MinTypeCode:
         case LocationTag:

@@ -12,6 +12,7 @@ namespace Rt2::MetaData
         FunctionTypeTag,
         StructTag,
         ConstructorTag,
+        ConverterTag,
         CvQualifiedTypeTag,
         DestructorTag,
         FieldTag,
@@ -84,6 +85,7 @@ namespace Rt2::MetaData
     class FunctionType;
     class Argument;
     class Constructor;
+    class Converter;
     class CvQualifiedType;
     class Destructor;
     class Field;

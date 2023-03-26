@@ -76,6 +76,8 @@ namespace Rt2::MetaData
 
         void link(Constructor* obj, const Xml::Node* node);
 
+        void link(Converter* obj, const Xml::Node* node);
+
         void link(Destructor* obj, const Xml::Node* node);
 
         void link(Method* obj, const Xml::Node* node);
