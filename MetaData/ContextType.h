@@ -22,6 +22,7 @@ namespace Rt2::MetaData
 
         const FieldArray& fields() const;
 
+        String name(const String& err = "<undefined>") const;
     };
 
 }  // namespace Rt2::MetaData

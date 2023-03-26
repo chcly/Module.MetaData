@@ -32,4 +32,10 @@ namespace Rt2::MetaData
         return _fieldCache;
     }
 
+    String ContextType::name(const String& err) const
+    {
+        if (_context)
+            return _context->name();
+        return err;
+    }
 }  // namespace Rt2::MetaData
