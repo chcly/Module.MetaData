@@ -19,9 +19,9 @@ namespace Rt2::MetaData
         return &_arguments;
     }
 
-    ContextType* Constructor::context()
+    const ContextType& Constructor::context() const
     {
-        return &_context;
+        return _context;
     }
 
 }  // namespace Rt2::MetaData

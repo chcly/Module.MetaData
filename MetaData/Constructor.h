@@ -13,7 +13,7 @@ namespace Rt2::MetaData
     private:
         friend class MetaFile;  
 
-        AccessType _access{UnknownTag};
+        AccessType _access{UnknownAccessTag};
 
         uint8_t _flags{NoFlags};
 
@@ -36,7 +36,7 @@ namespace Rt2::MetaData
 
         ArgumentListType* arguments();
 
-        ContextType* context();
+        const ContextType& context() const;
     };
 
     inline AccessType Constructor::access() const

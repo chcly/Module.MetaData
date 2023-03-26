@@ -28,6 +28,8 @@ namespace Rt2::MetaData
 
         AccessType access() const;
 
+        AtomicType atomic() const;
+
         size_t offset() const;
 
         Type* type() const;

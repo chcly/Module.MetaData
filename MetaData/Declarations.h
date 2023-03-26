@@ -5,6 +5,7 @@ namespace Rt2::MetaData
 {
     enum TypeCode
     {
+        NullCode = -1,
         MinTypeCode,
         ClassTag,
         FunctionTag,
@@ -27,13 +28,11 @@ namespace Rt2::MetaData
 
         // non xml tags
         LocationTag,
-
-        NullCode
     };
 
     enum AccessType
     {
-        UnknownTag,
+        UnknownAccessTag = MinTypeCode,
         PublicTag,
         PrivateTag,
         ProtectedTag,
@@ -41,11 +40,29 @@ namespace Rt2::MetaData
 
     enum AtomicType
     {
-        CharTag,
-        IntTag,
-        FloatTag,
-        DoubleTag,
+        AtomicUnknown = NullCode,
+        I8Tag,
+        I16Tag,
+        I32Tag,
+        I64Tag,
+        U8Tag,
+        U16Tag,
+        U32Tag,
+        U64Tag,
+        R32Tag,
+        R64Tag,
+        UserTypeTag,
         VoidTag,
+    };
+
+    enum DeclFlag
+    {
+        RefDecl         = 0x01,
+        PtrDecl         = 0x02,
+        PtrPtrDecl      = 0x04,
+        ConstDecl       = 0x08,
+        FunctionPtrDecl = 0x10,
+        MemberPtrDecl   = 0x20,
     };
 
     enum Flags
@@ -81,6 +98,6 @@ namespace Rt2::MetaData
     class ArgumentListType;
     class TypeListBuilder;
 
-    using TypeArray      = SimpleArray<Type*>;
+    using TypeArray = SimpleArray<Type*>;
 
 }  // namespace Rt2::MetaData

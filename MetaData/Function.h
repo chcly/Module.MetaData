@@ -35,7 +35,7 @@ namespace Rt2::MetaData
 
         ArgumentListType* arguments();
 
-        ContextType* context();
+        const ContextType& context() const;
     };
 
     inline Type* Function::returns() const

@@ -12,7 +12,7 @@ namespace Rt2::MetaData
     private:
         friend class MetaFile;
 
-        AccessType _access{UnknownTag};
+        AccessType _access{UnknownAccessTag};
 
         uint8_t _flags{NoFlags};
 
@@ -30,7 +30,7 @@ namespace Rt2::MetaData
 
         Location* location();
 
-        ContextType* context();
+        const ContextType& context() const;
     };
 
     inline AccessType Destructor::access() const

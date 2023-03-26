@@ -24,7 +24,7 @@ namespace Rt2::MetaData
 
         Type* type() const;
 
-        ContextType* context();
+        const ContextType& context() const;
     };
 
     inline Type* Typedef::type() const

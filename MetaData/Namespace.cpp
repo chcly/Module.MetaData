@@ -9,8 +9,9 @@ namespace Rt2::MetaData
     {
     }
 
-    ContextType* Namespace::context()
+    const ContextType& Namespace::context() const
     {
-        return &_context;
+        return _context;
     }
+
 }  // namespace Rt2::MetaData

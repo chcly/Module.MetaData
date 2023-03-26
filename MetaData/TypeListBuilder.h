@@ -1,15 +1,10 @@
 #pragma once
 #include "MetaData/Type.h"
+#include "MetaData/ArrayDeclarations.h"
 #include "MetaFile.h"
 
 namespace Rt2::MetaData
 {
-    using NamespaceArray = SimpleArray<Namespace*>;
-    using ClassArray     = SimpleArray<Class*>;
-    using StructArray    = SimpleArray<Struct*>;
-    using FunctionArray  = SimpleArray<Function*>;
-    using TypedefArray   = SimpleArray<Typedef*>;
-    using FileArray      = SimpleArray<File*>;
 
     class TypeListBuilder
     {

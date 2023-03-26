@@ -8,4 +8,9 @@ namespace Rt2::MetaData
         Type(sId, name, code)
     {
     }
+
+    AtomicType FundamentalType::type() const
+    {
+        return _atomic;
+    }
 }  // namespace Rt2::MetaData

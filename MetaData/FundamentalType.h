@@ -9,11 +9,11 @@ namespace Rt2::MetaData
         static constexpr TypeCode id = FundamentalTypeTag;
 
     private:
-        friend class MetaFile;  
+        friend class MetaFile;
 
-        size_t _sizeInBytes{0};
-
-        size_t _align{0};
+        AtomicType _atomic{AtomicUnknown};
+        size_t     _sizeInBytes{0};
+        size_t     _align{0};
 
     public:
         FundamentalType(const String& sId, const String& name, TypeCode code);
@@ -22,6 +22,8 @@ namespace Rt2::MetaData
         size_t sizeInBytes() const;
 
         size_t alignment() const;
+
+        AtomicType type() const;
     };
 
     inline size_t FundamentalType::sizeInBytes() const

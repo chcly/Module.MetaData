@@ -1,4 +1,5 @@
 #include "MetaData/Field.h"
+#include "MetaData/FundamentalType.h"
 
 namespace Rt2::MetaData
 {
@@ -7,6 +8,13 @@ namespace Rt2::MetaData
                  const TypeCode code) :
         Type(sId, name, code)
     {
+    }
+
+    AtomicType Field::atomic() const
+    {
+        if (_type && _type->isTypeOf(FundamentalTypeTag))
+            return _type->cast<FundamentalType>()->type();
+        return AtomicUnknown;
     }
 
     Location* Field::location()

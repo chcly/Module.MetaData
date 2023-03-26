@@ -46,6 +46,25 @@ namespace Rt2::MetaData
         {        "Typedef",         TypedefTag}
     };
 
+    struct AtomicTable
+    {
+        const char* name;
+        AtomicType  type;
+    };
+
+    static AtomicTable AtomicTypeNames[] = {
+        {           "signed char",  I8Tag},
+        {             "short int", I16Tag},
+        {                   "int", I32Tag},
+        {         "long long int", I64Tag},
+        {         "unsigned char",  U8Tag},
+        {    "short unsigned int", U16Tag},
+        {          "unsigned int", U32Tag},
+        {"long long unsigned int", U64Tag},
+        {                 "float", R32Tag},
+        {                "double", R64Tag},
+    };
+
     class AttributeConverter
     {
     public:
@@ -57,7 +76,7 @@ namespace Rt2::MetaData
                 return PrivateTag;
             if (val == "protected")
                 return ProtectedTag;
-            return UnknownTag;
+            return UnknownAccessTag;
         }
 
         static uint8_t flags(const Xml::Node* node)
@@ -97,6 +116,19 @@ namespace Rt2::MetaData
                 break;
             }
         }
+
+        static AtomicType atomicCode(const String& dest)
+        {
+            if (!dest.empty())
+            {
+                for (const auto& [name, type] : AtomicTypeNames)
+                {
+                    if (dest == name)
+                        return type;
+                }
+            }
+            return AtomicUnknown;
+        }
     };
     using Ac = AttributeConverter;
 
@@ -115,47 +147,6 @@ namespace Rt2::MetaData
         if (Type* val = find(id))
             return val;
         throw Exception("assert_find failed to resolve: ", id);
-    }
-
-    ContextType* MetaFile::context_find(const String& id)
-    {
-        switch (Type* base = assert_find(id);
-                base->code())
-        {
-        case ClassTag:
-            return context<Class>(base);
-        case NamespaceTag:
-            return base->assert_cast<Namespace>()->context();
-        case FunctionTag:
-            return base->assert_cast<Function>()->context();
-        case TypedefTag:
-            return base->assert_cast<Typedef>()->context();
-        case FieldTag:
-            return context<Field>(base);
-        case StructTag:
-            return base->assert_cast<Struct>()->context();
-        case DestructorTag:
-            return base->assert_cast<Destructor>()->context();
-        case MethodTag:
-            return base->assert_cast<Method>()->context();
-        case ConstructorTag:
-            return base->assert_cast<Constructor>()->context();
-        case OperatorMethodTag:
-            return base->assert_cast<OperatorMethod>()->context();
-        case FunctionTypeTag:
-        case CvQualifiedTypeTag:
-        case FundamentalTypeTag:
-        case FileTag:
-        case ReferenceTypeTag:
-        case PointerTypeTag:
-        case ArgumentTag:
-        case MaxTypeCode:
-        case LocationTag:
-        case MinTypeCode:
-        case NullCode:
-        default:
-            return nullptr;
-        }
     }
 
     void MetaFile::clear()
@@ -278,12 +269,12 @@ namespace Rt2::MetaData
 
     void MetaFile::link(Namespace* obj, const Xml::Node* node)
     {
-        mergeMembers(obj->context(), node);
+        mergeMembers(context<Namespace>(obj), node);
     }
 
     void MetaFile::link(Class* obj, const Xml::Node* node)
     {
-        mergeMembers(&obj->_context, node);
+        mergeMembers(context<Class>(obj), node);
         linkLocation(obj->location(), node);
 
         obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
@@ -308,7 +299,7 @@ namespace Rt2::MetaData
 
     void MetaFile::link(Struct* obj, const Xml::Node* node)
     {
-        mergeMembers(obj->context(), node);
+        mergeMembers(context<Struct>(obj), node);
         linkLocation(obj->location(), node);
 
         obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
@@ -375,6 +366,8 @@ namespace Rt2::MetaData
         obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
 
         obj->_align = Char::toUint64(node->attribute("align", "0"));
+
+        obj->_atomic = Ac::atomicCode(node->attribute("name"));
     }
 
     void MetaFile::link(ReferenceType* obj, const Xml::Node* node)
@@ -464,21 +457,52 @@ namespace Rt2::MetaData
         case LocationTag:
         case ArgumentTag:
         case MinTypeCode:
+        case NullCode:
         case MaxTypeCode:
         default:
             break;
         }
     }
 
-    void MetaFile::loadImpl(const Xml::Node* node)
+    ContextType* MetaFile::context_find(const String& id)
     {
-        if (!node)
-            throw Exception("invalid node");
-
-        _format = node->attribute("format");
-
-        Xml::Node::forEach(node->children(), this, &MetaFile::createType);
-        Xml::Node::forEach(node->children(), this, &MetaFile::linkType);
+        switch (Type* base = assert_find(id);
+                base->code())
+        {
+        case ClassTag:
+            return context<Class>(base);
+        case NamespaceTag:
+            return context<Namespace>(base);
+        case FunctionTag:
+            return context<Function>(base);
+        case TypedefTag:
+            return context<Typedef>(base);
+        case FieldTag:
+            return context<Field>(base);
+        case StructTag:
+            return context<Struct>(base);
+        case DestructorTag:
+            return context<Destructor>(base);
+        case MethodTag:
+            return context<Method>(base);
+        case ConstructorTag:
+            return context<Constructor>(base);
+        case OperatorMethodTag:
+            return context<OperatorMethod>(base);
+        case FunctionTypeTag:
+        case CvQualifiedTypeTag:
+        case FundamentalTypeTag:
+        case FileTag:
+        case ReferenceTypeTag:
+        case PointerTypeTag:
+        case ArgumentTag:
+        case MaxTypeCode:
+        case LocationTag:
+        case MinTypeCode:
+        case NullCode:
+        default:
+            return nullptr;
+        }
     }
 
     Type* MetaFile::create(const String& strId, const String& name, const TypeCode id)
@@ -521,9 +545,20 @@ namespace Rt2::MetaData
         case MinTypeCode:
         case LocationTag:
         case MaxTypeCode:
+        case NullCode:
         default:
             return nullptr;
         }
+    }
+    void MetaFile::loadImpl(const Xml::Node* node)
+    {
+        if (!node)
+            throw Exception("invalid node");
+
+        _format = node->attribute("format");
+
+        Xml::Node::forEach(node->children(), this, &MetaFile::createType);
+        Xml::Node::forEach(node->children(), this, &MetaFile::linkType);
     }
 
     void MetaFile::load(IStream& stream)

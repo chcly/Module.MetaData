@@ -17,7 +17,7 @@ namespace Rt2::MetaData
 
         uint8_t _flags{NoFlags};
 
-        AccessType _access{UnknownTag};
+        AccessType _access{UnknownAccessTag};
 
         Location _location;
 
@@ -39,7 +39,7 @@ namespace Rt2::MetaData
 
         ArgumentListType* arguments();
 
-        ContextType* context();
+        const ContextType& context() const;
     };
 
     inline AccessType OperatorMethod::access() const

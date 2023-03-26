@@ -17,7 +17,7 @@ namespace Rt2::MetaData
         Namespace(const String& sId, const String& name, TypeCode code);
         ~Namespace() override = default;
 
-        ContextType* context();
+        const ContextType& context() const;
     };
 
 }  // namespace Rt2::MetaData
