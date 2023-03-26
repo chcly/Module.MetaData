@@ -23,8 +23,6 @@ if (NOT GitUpdate_SUCCESS)
     return()
 endif()
 
-    SET(ExternalTarget_LOG TRUE)
-
 include(StaticRuntime)
 include(GTestUtils)
 include(ExternalTarget)
