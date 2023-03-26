@@ -3,7 +3,7 @@
 Is a small type library that loads and reconstructs a [CastXML](https://github.com/CastXML/CastXML) file for use as meta information.
 
 It is experimental but it could possibly be used write language bindings from C++ to other languages, or other code generating tools.
-A neat goal would be to make it similar in use to C# assembly classes except that only needed items cam be fed to it.
+A neat goal would be to make it similar in use to C# assembly classes except that only needed items can be fed to it.
 
 - CastXML is an awesome project!
 
