@@ -8,12 +8,13 @@
 #include "MetaData/Function.h"
 #include "MetaData/MetaFile.h"
 #include "MetaData/Namespace.h"
+#include "MetaData/Struct.h"
 #include "MetaData/TypeListBuilder.h"
+#include "MetaData/Typedef.h"
 #include "ThisDir.h"
 #include "Utils/Directory/Path.h"
+#include "Utils/StreamConverters/Hex.h"
 #include "gtest/gtest.h"
-#include "MetaData/Struct.h"
-#include "MetaData/Typedef.h"
 
 using namespace Rt2;
 using namespace MetaData;
@@ -73,7 +74,7 @@ GTEST_TEST(MetaData, File_001)
         EXPECT_EQ(st0->offset(), 0);
         EXPECT_NE(st0->type(), nullptr);
 
-        EXPECT_EQ(st0->context().type(), ClassTag);
+        EXPECT_EQ(st0->context().parentType(), ClassTag);
     }
 }
 
@@ -174,7 +175,15 @@ GTEST_TEST(MetaData, File_005)
     for (auto obj : classes)
     {
         Console::println(obj->name());
-        EXPECT_EQ(obj->context().type(), NamespaceTag);
+        EXPECT_EQ(obj->context().parentType(), NamespaceTag);
+
+        const FieldArray& fa = obj->context().fields();
+
+        EXPECT_FALSE(fa.empty());
+        EXPECT_EQ(fa.size(), 1);
+        EXPECT_EQ(fa.at(0)->access(), PrivateTag);
+        EXPECT_EQ(fa.at(0)->atomic(), I32Tag);
+        EXPECT_EQ(fa.at(0)->name(), "_x");
     }
 
     NamespaceArray namespaces;
@@ -201,7 +210,3 @@ GTEST_TEST(MetaData, File_005)
     for (auto obj : typedefs)
         Console::println(obj->name());
 }
-
-
-
-
