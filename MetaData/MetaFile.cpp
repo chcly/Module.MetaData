@@ -53,16 +53,17 @@ namespace Rt2::MetaData
     };
 
     static AtomicTable AtomicTypeNames[] = {
-        {           "signed char",  I8Tag},
-        {             "short int", I16Tag},
-        {                   "int", I32Tag},
-        {         "long long int", I64Tag},
-        {         "unsigned char",  U8Tag},
-        {    "short unsigned int", U16Tag},
-        {          "unsigned int", U32Tag},
-        {"long long unsigned int", U64Tag},
-        {                 "float", R32Tag},
-        {                "double", R64Tag},
+        {           "signed char",   I8Tag},
+        {             "short int",  I16Tag},
+        {                   "int",  I32Tag},
+        {         "long long int",  I64Tag},
+        {         "unsigned char",   U8Tag},
+        {    "short unsigned int",  U16Tag},
+        {          "unsigned int",  U32Tag},
+        {"long long unsigned int",  U64Tag},
+        {                 "float",  R32Tag},
+        {                "double",  R64Tag},
+        {                  "void", VoidTag},
     };
 
     class AttributeConverter

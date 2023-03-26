@@ -20,5 +20,5 @@
   <FundamentalType id="_19" name="unsigned int" size="32" align="32"/>
   <FundamentalType id="_20" name="long long unsigned int" size="64" align="64"/>
   <Namespace id="_2" name="::"/>
-  <File id="f1" name="F:/Internal/repos/MetaData/Test/Source/Integers.cpp"/>
+  <File id="f1" name="Source/Integers.cpp"/>
 </CastXML>

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<CastXML format="1.3.1">
+  <Namespace id="_1" name="Module" context="_2" members="_3"/>
+  <Class id="_3" name="Class1" context="_1" location="f1:3" file="f1" line="3" members="_4 _5 _6 _7 _8 _9 _10 _11 _12" size="64" align="32"/>
+  <Field id="_4" name="_field1" type="_13" init="{0}" context="_3" access="private" location="f1:6" file="f1" line="6" offset="0"/>
+  <Field id="_5" name="_field2" type="_13" init="{0}" context="_3" access="private" location="f1:7" file="f1" line="7" offset="32"/>
+  <Constructor id="_6" name="Class1" context="_3" access="public" location="f1:10" file="f1" line="10" inline="1"/>
+  <Method id="_7" name="setField1" returns="_14" context="_3" access="public" location="f1:12" file="f1" line="12" inline="1" mangled="?setField1@Class1@Module@@QEAAXAEBH@Z">
+    <Argument name="value" type="_15" location="f1:12" file="f1" line="12"/>
+  </Method>
+  <Method id="_8" name="getField1" returns="_13" context="_3" access="public" location="f1:17" file="f1" line="17" const="1" inline="1" mangled="?getField1@Class1@Module@@QEBAHXZ"/>
+  <Method id="_9" name="doSomeWork" returns="_14" context="_3" access="public" location="f1:22" file="f1" line="22" inline="1" mangled="?doSomeWork@Class1@Module@@QEAAXXZ"/>
+  <Constructor id="_10" name="Class1" context="_3" access="public" location="f1:3" file="f1" line="3" inline="1" artificial="1">
+    <Argument type="_16" location="f1:3" file="f1" line="3"/>
+  </Constructor>
+  <OperatorMethod id="_11" name="=" returns="_17" context="_3" access="public" location="f1:3" file="f1" line="3" inline="1" artificial="1" mangled="??4Class1@Module@@QEAAAEAV01@AEBV01@@Z">
+    <Argument type="_16" location="f1:3" file="f1" line="3"/>
+  </OperatorMethod>
+  <Destructor id="_12" name="Class1" context="_3" access="public" location="f1:3" file="f1" line="3" inline="1" artificial="1"/>
+  <FundamentalType id="_13" name="int" size="32" align="32"/>
+  <FundamentalType id="_14" name="void" size="0" align="8"/>
+  <ReferenceType id="_15" type="_13c" size="64" align="64"/>
+  <CvQualifiedType id="_13c" type="_13" const="1"/>
+  <ReferenceType id="_16" type="_3c" size="64" align="64"/>
+  <CvQualifiedType id="_3c" type="_3" const="1"/>
+  <ReferenceType id="_17" type="_3" size="64" align="64"/>
+  <Namespace id="_2" name="::"/>
+  <File id="f1" name="Source/Class.cpp"/>
+</CastXML>

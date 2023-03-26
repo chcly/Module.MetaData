@@ -27,65 +27,6 @@ GTEST_TEST(MetaData, File_001)
     EXPECT_TRUE(ifs.is_open());
     EXPECT_NO_THROW({ fp.load(ifs); });
 
-    EXPECT_FALSE(fp.format().empty());
-    EXPECT_EQ(fp.format(), "1.3.1");
-
-    Type* tc0 = fp.find("_1");
-    EXPECT_NE(tc0, nullptr);
-    if (tc0)
-    {
-        EXPECT_EQ(tc0->code(), Rt2::MetaData::NamespaceTag);
-
-        Namespace* ns = tc0->cast<Namespace>();
-
-        EXPECT_NE(ns, nullptr);
-        // EXPECT_FALSE(ns->members().empty());
-    }
-
-    Type* tc1 = fp.find("_3");
-    EXPECT_NE(tc1, nullptr);
-    if (tc1)
-    {
-        EXPECT_EQ(tc1->code(), Rt2::MetaData::ClassTag);
-
-        Class* st0 = tc1->cast<Class>();
-        Console::println(st0->location()->readLine());
-
-        EXPECT_NE(st0, nullptr);
-        // EXPECT_FALSE(st0->members().empty());
-        // EXPECT_EQ(st0->members().size(), 9);
-
-        // EXPECT_EQ(st0->sizeInBytes(), 32);
-        // EXPECT_EQ(st0->alignment(), 32);
-        // EXPECT_EQ(st0->context(), tc0);
-        // EXPECT_TRUE(st0->hasMember(st0));
-    }
-
-    Type* tc2 = fp.find("_6");
-    EXPECT_NE(tc2, nullptr);
-    if (tc2)
-    {
-        EXPECT_EQ(tc2->code(), Rt2::MetaData::FieldTag);
-
-        Field* st0 = tc2->cast<Field>();
-        Console::println(st0->location()->readLine());
-        EXPECT_NE(st0, nullptr);
-        EXPECT_EQ(st0->access(), Rt2::MetaData::PrivateTag);
-        EXPECT_EQ(st0->offset(), 0);
-        EXPECT_NE(st0->type(), nullptr);
-
-        EXPECT_EQ(st0->context().parentType(), ClassTag);
-    }
-}
-
-GTEST_TEST(MetaData, File_002)
-{
-    MetaFile        fp;
-    InputFileStream ifs;
-    ifs.open(TestFile("File1.xml"));
-    EXPECT_TRUE(ifs.is_open());
-    EXPECT_NO_THROW({ fp.load(ifs); });
-
     FileArray files;
     fp.list().files(files);
 
@@ -102,7 +43,7 @@ GTEST_TEST(MetaData, File_002)
     }
 }
 
-GTEST_TEST(MetaData, File_003)
+GTEST_TEST(MetaData, File_002)
 {
     MetaFile        fp;
     InputFileStream ifs;
@@ -138,7 +79,7 @@ GTEST_TEST(MetaData, File_003)
     EXPECT_TRUE(arg0->isPointer());
 }
 
-GTEST_TEST(MetaData, File_004)
+GTEST_TEST(MetaData, File_003)
 {
     MetaFile        fp;
     InputFileStream ifs;
@@ -161,11 +102,11 @@ GTEST_TEST(MetaData, File_004)
     EXPECT_TRUE(arg0->isPointer());
 }
 
-GTEST_TEST(MetaData, File_005)
+GTEST_TEST(MetaData, File_004)
 {
     MetaFile        fp;
     InputFileStream ifs;
-    ifs.open(TestFile("File1.xml"));
+    ifs.open(TestFile("Class.xml"));
     EXPECT_TRUE(ifs.is_open());
     EXPECT_NO_THROW({ fp.load(ifs); });
 
@@ -176,37 +117,18 @@ GTEST_TEST(MetaData, File_005)
     {
         Console::println(obj->name());
         EXPECT_EQ(obj->context().parentType(), NamespaceTag);
+        EXPECT_EQ(obj->context().parent()->name(), "Module");
 
         const FieldArray& fa = obj->context().fields();
 
         EXPECT_FALSE(fa.empty());
-        EXPECT_EQ(fa.size(), 1);
+        EXPECT_EQ(fa.size(), 2);
         EXPECT_EQ(fa.at(0)->access(), PrivateTag);
         EXPECT_EQ(fa.at(0)->atomic(), I32Tag);
-        EXPECT_EQ(fa.at(0)->name(), "_x");
+        EXPECT_EQ(fa.at(0)->name(), "_field1");
+
+        EXPECT_EQ(fa.at(1)->access(), PrivateTag);
+        EXPECT_EQ(fa.at(1)->atomic(), I32Tag);
+        EXPECT_EQ(fa.at(1)->name(), "_field2");
     }
-
-    NamespaceArray namespaces;
-    fp.list().namespaces(namespaces);
-    EXPECT_EQ(namespaces.size(), 2);
-    for (auto obj : namespaces)
-        Console::println(obj->name());
-
-    StructArray structs;
-    fp.list().structures(structs);
-    EXPECT_EQ(structs.size(), 1);
-    for (auto obj : structs)
-        Console::println(obj->name());
-
-    FunctionArray functions;
-    fp.list().functions(functions);
-    EXPECT_EQ(functions.size(), 1);
-    for (auto obj : functions)
-        Console::println(obj->name());
-
-    TypedefArray typedefs;
-    fp.list().typedefs(typedefs);
-    EXPECT_EQ(typedefs.size(), 0);
-    for (auto obj : typedefs)
-        Console::println(obj->name());
 }

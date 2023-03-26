@@ -47,5 +47,5 @@
   <ReferenceType id="_29" type="_4" size="64" align="64"/>
   <Namespace id="_2" name="::"/>
   <PointerType id="_30" type="_3" size="64" align="64"/>
-  <File id="f1" name="F:/Internal/repos/MetaData/Test/Source/File1.h"/>
+  <File id="f1" name="Source/File1.h"/>
 </CastXML>

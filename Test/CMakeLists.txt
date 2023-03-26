@@ -1,12 +1,11 @@
 set(TestTargetName ${TargetName}Test)
 include(TestDirectory)
 include(CastXmlConfig)
+include(TargetDebugOptions)
 
-set(From_CSV "ClassA,File1,LinkOrder,Integers")
+set(From_CSV "ClassA,File1,LinkOrder,Integers,Module")
 extract_source(SRC ${CMAKE_CURRENT_SOURCE_DIR}/Source/)
 compile_and_transfer(XML ${CMAKE_CURRENT_SOURCE_DIR} ${From_CSV} ${SRC})
-
-
 
 gen_path_to_here()
 
@@ -29,6 +28,9 @@ add_executable(
     ${TestTarget_SRC}
     ${XML}
 )
+
+TARGET_DEBUG(${TestTargetName} ${CMAKE_CURRENT_SOURCE_DIR})
+
 target_link_libraries(
     ${TestTargetName} 
     ${GTEST_LIBRARY}
