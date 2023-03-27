@@ -18,6 +18,8 @@ namespace Rt2::MetaData
         ~Namespace() override = default;
 
         const ContextType& context() const;
+
+        bool isGlobalScope() const;
     };
 
 }  // namespace Rt2::MetaData

@@ -1,4 +1,5 @@
 #include "MetaData/Namespace.h"
+#include "Utils/Char.h"
 
 namespace Rt2::MetaData
 {
@@ -14,4 +15,8 @@ namespace Rt2::MetaData
         return _context;
     }
 
+    bool Namespace::isGlobalScope() const
+    {
+        return Char::equals(name().c_str(), name().size(), "::", 2);
+    }
 }  // namespace Rt2::MetaData

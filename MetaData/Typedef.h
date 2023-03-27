@@ -10,10 +10,10 @@ namespace Rt2::MetaData
         static constexpr TypeCode id = TypedefTag;
 
     private:
-        friend class MetaFile;  
+        friend class MetaFile;
 
         Type* _type{nullptr};
-        
+
         Location _location;
 
         ContextType _context;
@@ -25,6 +25,8 @@ namespace Rt2::MetaData
         Type* type() const;
 
         const ContextType& context() const;
+
+        const Location& location() const;
     };
 
     inline Type* Typedef::type() const

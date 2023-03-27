@@ -29,8 +29,6 @@ add_executable(
     ${XML}
 )
 
-TARGET_DEBUG(${TestTargetName} ${CMAKE_CURRENT_SOURCE_DIR})
-
 target_link_libraries(
     ${TestTargetName} 
     ${GTEST_LIBRARY}
@@ -48,4 +46,6 @@ set_target_properties(
 
 if (MetaData_AUTO_RUN_TEST)
     run_test(${TestTargetName})
+else()
+    target_debug(${TestTargetName} ${CMAKE_CURRENT_SOURCE_DIR})
 endif()

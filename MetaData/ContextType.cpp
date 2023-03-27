@@ -1,5 +1,6 @@
 #include "MetaData/ContextType.h"
 #include "MetaData/Field.h"
+#include "MetaData/Typedef.h"
 
 namespace Rt2::MetaData
 {
@@ -27,9 +28,22 @@ namespace Rt2::MetaData
 
     const FieldArray& ContextType::fields() const
     {
-        if (_fieldCache.empty())
-            extract<Field>(_members, _fieldCache);
-        return _fieldCache;
+        if (!_fields.state)
+        {
+            _fields.state = true;
+            extract<Field>(_members, _fields.items);
+        }
+        return _fields.items;
+    }
+
+    const TypedefArray& ContextType::typedefs() const
+    {
+        if (!_typedefs.state)
+        {
+            _typedefs.state = true;
+            extract<Typedef>(_members, _typedefs.items);
+        }
+        return _typedefs.items;
     }
 
     String ContextType::name(const String& err) const

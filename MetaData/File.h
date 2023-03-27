@@ -12,7 +12,7 @@ namespace Rt2::MetaData
     private:
         friend class MetaFile;  
 
-        StringArray _lines;
+        mutable StringArray _lines;
 
     public:
         File(const String& sId, const String& name, TypeCode code);
@@ -26,12 +26,10 @@ namespace Rt2::MetaData
 
         void readLines(StringArray& lines) const;
 
-        void open();
+        void open() const;
 
         String line(size_t line) const;
-
-        String line(size_t line);
-
-        void close();
+        
+        void close() const;
     };
 }  // namespace Rt2::MetaData

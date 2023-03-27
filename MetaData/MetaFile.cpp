@@ -225,6 +225,8 @@ namespace Rt2::MetaData
 
     void MetaFile::link(Typedef* obj, const Xml::Node* node)
     {
+        linkLocation(&obj->_location, node);
+
         obj->_type = assert_find(node->attribute("type"));
     }
 

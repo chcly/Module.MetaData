@@ -1,5 +1,4 @@
 #include <cstdio>
-#include "Utils/String.h"
 #include "MetaData/ArgumentList.h"
 #include "MetaData/Class.h"
 #include "MetaData/Constructor.h"
@@ -14,6 +13,7 @@
 #include "ThisDir.h"
 #include "Utils/Directory/Path.h"
 #include "Utils/StreamConverters/Hex.h"
+#include "Utils/String.h"
 #include "gtest/gtest.h"
 
 using namespace Rt2;
@@ -130,5 +130,62 @@ GTEST_TEST(MetaData, File_004)
         EXPECT_EQ(fa.at(1)->access(), PrivateTag);
         EXPECT_EQ(fa.at(1)->atomic(), I32Tag);
         EXPECT_EQ(fa.at(1)->name(), "_field2");
+    }
+}
+
+void CheckTypedef(Typedef*     td,
+                  const char*  name,
+                  void*        parent,
+                  const size_t line,
+                  const char*  fileName)
+{
+    EXPECT_NE(td, nullptr);
+    EXPECT_EQ(td->name(), name);
+    EXPECT_EQ(td->context().parent(), parent);
+    EXPECT_EQ(td->location().line(), line);
+    EXPECT_EQ(td->location().filename(), fileName);
+}
+
+GTEST_TEST(MetaData, Integers_xml_01)
+{
+    MetaFile        fp;
+    InputFileStream ifs;
+    ifs.open(TestFile("Integers.xml"));
+    EXPECT_TRUE(ifs.is_open());
+    EXPECT_NO_THROW({ fp.load(ifs); });
+
+    NamespaceArray dest;
+    fp.list().namespaces(dest);
+
+    for (auto&& ns : dest)
+    {
+        if (!ns->isGlobalScope())
+        {
+            Console::writeLine(ns->name());
+            EXPECT_EQ(ns->name(), "Integers");
+
+            const TypedefArray& tda = ns->context().typedefs();
+            EXPECT_EQ(tda.size(), 10);
+
+            CheckTypedef(tda.at(0), "I8", ns, 3, "Source/Integers.cpp");
+            CheckTypedef(tda.at(1), "I16", ns, 4, "Source/Integers.cpp");
+            CheckTypedef(tda.at(2), "I32", ns, 5, "Source/Integers.cpp");
+            CheckTypedef(tda.at(3), "I64", ns, 6, "Source/Integers.cpp");
+            CheckTypedef(tda.at(4), "U8", ns, 7, "Source/Integers.cpp");
+            CheckTypedef(tda.at(5), "U16", ns, 8, "Source/Integers.cpp");
+            CheckTypedef(tda.at(6), "U32", ns, 9, "Source/Integers.cpp");
+            CheckTypedef(tda.at(7), "U64", ns, 10, "Source/Integers.cpp");
+            CheckTypedef(tda.at(8), "IMax", ns, 11, "Source/Integers.cpp");
+            CheckTypedef(tda.at(9), "UMax", ns, 12, "Source/Integers.cpp");
+
+            for (uint32_t i = 0; i < tda.size(); ++i)
+            {
+                auto td = tda.at(i);
+                Console::println(td->location().readLine());
+
+                size_t loc = td->location().readLine().find(td->name());
+                EXPECT_NE(loc, String::npos);
+            }
+        }
     }
 }

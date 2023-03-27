@@ -17,17 +17,18 @@ namespace Rt2::MetaData
 
         ~Location() = default;
 
-        File* file() const;
-
         size_t line() const;
 
-        String readLine() const;
-    };
+        int lineI() const;
 
-    inline File* Location::file() const
-    {
-        return _file;
-    }
+        String readLine() const;
+
+        void readLines(StringArray& lines) const;
+
+        String filename() const;
+
+        bool exists() const;
+    };
 
     inline size_t Location::line() const
     {

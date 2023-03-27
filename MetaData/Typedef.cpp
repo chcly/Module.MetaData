@@ -13,4 +13,10 @@ namespace Rt2::MetaData
     {
         return _context;
     }
+
+    const Location& Typedef::location() const
+    {
+        return _location;
+    }
+
 }  // namespace Rt2::MetaData

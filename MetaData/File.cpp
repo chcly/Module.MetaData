@@ -16,7 +16,7 @@ namespace Rt2::MetaData
 
     Directory::Path File::path() const
     {
-        return Directory::Path(name());
+        return Directory::Path(name()).absolute();
     }
 
     bool File::exists() const
@@ -43,12 +43,12 @@ namespace Rt2::MetaData
             {
                 OutputStringStream out;
                 Su::copy(out, ifs, true);
-                Su::splitLine(lines, out.str());
+                Su::scanSplitLine(lines, out.str());
             }
         }
     }
 
-    void File::open()
+    void File::open() const
     {
         if (_lines.empty())
             readLines(_lines);
@@ -56,20 +56,14 @@ namespace Rt2::MetaData
 
     String File::line(const size_t line) const
     {
+        if (_lines.empty())
+            readLines(_lines);
         if (line < _lines.size())
             return _lines.at(line);
         return {};
     }
 
-    String File::line(const size_t line)
-    {
-        if (_lines.empty())
-            readLines(_lines);
-        return const_cast<const File*>(this)
-            ->line(line);
-    }
-
-    void File::close()
+    void File::close() const
     {
         _lines.clear();
     }
