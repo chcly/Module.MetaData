@@ -17,9 +17,9 @@ namespace Rt2::MetaData
         return AtomicUnknown;
     }
 
-    Location* Field::location()
+    const Location& Field::location() const
     {
-        return &_location;
+        return _location;
     }
 
     const ContextType& Field::context() const

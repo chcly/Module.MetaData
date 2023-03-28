@@ -9,7 +9,7 @@ namespace Rt2::MetaData
         static constexpr TypeCode id = FunctionTypeTag;
 
     private:
-        friend class MetaFile;  
+        friend class MetaFile;
 
         Type* _returns{nullptr};
 
@@ -19,7 +19,7 @@ namespace Rt2::MetaData
 
         Type* returns() const;
     };
-    
+
     inline Type* FunctionType::returns() const
     {
         return _returns;

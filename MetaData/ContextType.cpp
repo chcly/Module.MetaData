@@ -1,6 +1,8 @@
 #include "MetaData/ContextType.h"
 #include "MetaData/Field.h"
 #include "MetaData/Typedef.h"
+#include "MetaData/Class.h"
+#include "MetaData/Converter.h"
 
 namespace Rt2::MetaData
 {
@@ -12,6 +14,17 @@ namespace Rt2::MetaData
             if (val->isTypeOf(T::id))
                 dest.push_back(static_cast<T*>(val));
         }
+    }
+
+    template <typename T>
+    const SimpleArray<T*>& tryGet(CacheLock<T> & cache, const TypeArray& all)
+    {
+        if (!cache.state)
+        {
+            cache.state = true;
+            extract<T>(all, cache.items);
+        }
+        return cache.items;
     }
 
     TypeCode ContextType::parentType() const
@@ -28,22 +41,22 @@ namespace Rt2::MetaData
 
     const FieldArray& ContextType::fields() const
     {
-        if (!_fields.state)
-        {
-            _fields.state = true;
-            extract<Field>(_members, _fields.items);
-        }
-        return _fields.items;
+        return tryGet<Field>(_fields, _members);
     }
 
     const TypedefArray& ContextType::typedefs() const
     {
-        if (!_typedefs.state)
-        {
-            _typedefs.state = true;
-            extract<Typedef>(_members, _typedefs.items);
-        }
-        return _typedefs.items;
+        return tryGet<Typedef>(_typedefs, _members);
+    }
+
+    const ClassArray& ContextType::classes() const
+    {
+        return tryGet<Class>(_classes, _members);
+    }
+
+    const ConverterArray& ContextType::converters() const
+    {
+        return tryGet<Converter>(_converters, _members);
     }
 
     String ContextType::name(const String& err) const

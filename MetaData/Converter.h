@@ -1,6 +1,7 @@
 #pragma once
 #include "MetaData/ContextType.h"
 #include "MetaData/Location.h"
+#include "ReturnContext.h"
 
 namespace Rt2::MetaData
 {
@@ -11,6 +12,8 @@ namespace Rt2::MetaData
 
     private:
         friend class MetaFile;
+
+        Type* _returns{nullptr};
 
         AccessType _access{UnknownAccessTag};
 
@@ -25,14 +28,23 @@ namespace Rt2::MetaData
 
         ~Converter() override = default;
 
+        Type* _returns_() const;
+
+        ReturnContext returns() const;
+
         AccessType access() const;
 
         uint8_t flags() const;
 
-        const Location* location() const;
+        const Location& location() const;
 
         const ContextType& context() const;
     };
+
+    inline Type* Converter::_returns_() const
+    {
+        return _returns;
+    }
 
     inline AccessType Converter::access() const
     {

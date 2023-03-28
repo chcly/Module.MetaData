@@ -13,16 +13,13 @@ namespace Rt2::MetaData
 
         Type* _context{nullptr};
 
-        template <typename T>
-        struct CacheLock
-        {
-            SimpleArray<T*> items;
-            bool            state{false};
-        };
-
         mutable CacheLock<Field> _fields;
 
         mutable CacheLock<Typedef> _typedefs;
+
+        mutable CacheLock<Class> _classes;
+
+        mutable CacheLock<Converter> _converters;
 
     public:
         TypeCode parentType() const;
@@ -32,6 +29,10 @@ namespace Rt2::MetaData
         const FieldArray& fields() const;
 
         const TypedefArray& typedefs() const;
+
+        const ClassArray& classes() const;
+
+        const ConverterArray& converters() const;
 
         String name(const String& err = "<undefined>") const;
     };

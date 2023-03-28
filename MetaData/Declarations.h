@@ -7,24 +7,32 @@ namespace Rt2::MetaData
     {
         NullCode = -1,
         MinTypeCode,
+        ArgumentTag,
+        ArrayTypeTag,
+        BaseTag,
         ClassTag,
-        FunctionTag,
-        FunctionTypeTag,
-        StructTag,
         ConstructorTag,
         ConverterTag,
         CvQualifiedTypeTag,
         DestructorTag,
+        ElaboratedTypeTag,
+        EnumerationTag,
         FieldTag,
-        TypedefTag,
-        FundamentalTypeTag,
         FileTag,
+        FunctionTag,
+        FunctionTypeTag,
+        FundamentalTypeTag,
         MethodTag,
         NamespaceTag,
+        OperatorFunctionTag,
         OperatorMethodTag,
-        ReferenceTypeTag,
         PointerTypeTag,
-        ArgumentTag,
+        ReferenceTypeTag,
+        StructTag,
+        TypedefTag,
+        UnimplementedTag,
+        UnionTag,
+        VariableTag,
         MaxTypeCode,
 
         // non xml tags
@@ -76,29 +84,37 @@ namespace Rt2::MetaData
         Const      = 0x10,
     };
 
-    class Type;
-    class ContextType;
-    class Typedef;
-    class Class;
-    class Struct;
-    class Function;
-    class FunctionType;
     class Argument;
+    class ArgumentListType;
+    class ArrayType;
+    class Base;
+    class Class;
     class Constructor;
+    class ContextType;
     class Converter;
     class CvQualifiedType;
     class Destructor;
+    class ElaboratedType;
+    class Enumeration;
     class Field;
-    class FundamentalType;
     class File;
+    class Function;
+    class FunctionType;
+    class FundamentalType;
+    class Location;
     class Method;
     class Namespace;
+    class OperatorFunction;
     class OperatorMethod;
-    class ReferenceType;
     class PointerType;
-    class Location;
-    class ArgumentListType;
+    class ReferenceType;
+    class Struct;
+    class Type;
+    class Typedef;
     class TypeListBuilder;
+    class Unimplemented;
+    class Union;
+    class Variable;
 
     using TypeArray = SimpleArray<Type*>;
 

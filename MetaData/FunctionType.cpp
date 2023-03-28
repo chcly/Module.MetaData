@@ -8,5 +8,4 @@ namespace Rt2::MetaData
         Type(sId, name, code)
     {
     }
-
 }  // namespace Rt2::MetaData

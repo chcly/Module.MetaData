@@ -3,18 +3,25 @@
 
 namespace Rt2::MetaData
 {
-
-    using TypeArray           = SimpleArray<Type*>;
-    using TypedefArray        = SimpleArray<Typedef*>;
     using ClassArray          = SimpleArray<Class*>;
-    using StructArray         = SimpleArray<Struct*>;
-    using FunctionArray       = SimpleArray<Function*>;
     using ConstructorArray    = SimpleArray<Constructor*>;
+    using ConverterArray      = SimpleArray<Converter*>;
     using DestructorArray     = SimpleArray<Destructor*>;
     using FieldArray          = SimpleArray<Field*>;
     using FileArray           = SimpleArray<File*>;
+    using FunctionArray       = SimpleArray<Function*>;
     using MethodArray         = SimpleArray<Method*>;
     using NamespaceArray      = SimpleArray<Namespace*>;
     using OperatorMethodArray = SimpleArray<OperatorMethod*>;
+    using StructArray         = SimpleArray<Struct*>;
+    using TypeArray           = SimpleArray<Type*>;
+    using TypedefArray        = SimpleArray<Typedef*>;
+
+    template <typename T>
+    struct CacheLock
+    {
+        SimpleArray<T*> items;
+        bool            state{false};
+    };
 
 }  // namespace Rt2::MetaData

@@ -3,15 +3,20 @@
 namespace Rt2::MetaData
 {
     Converter::Converter(const String&  sId,
-                             const String&  name,
-                             const TypeCode code) :
+                         const String&  name,
+                         const TypeCode code) :
         Type(sId, name, code)
     {
     }
 
-    const Location* Converter::location() const
+    ReturnContext Converter::returns() const
     {
-        return &_location;
+        return ReturnContext(_returns);
+    }
+
+    const Location& Converter::location() const
+    {
+        return _location;
     }
 
     const ContextType& Converter::context() const

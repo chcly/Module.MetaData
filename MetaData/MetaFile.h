@@ -13,7 +13,7 @@ namespace Rt2::MetaData
     class MetaFile
     {
     public:
-        using Types = std::unordered_map<String, Type*>;
+        using Types = HashTable<String, Type*>;
 
     private:
         friend class TypeListBuilder;
@@ -73,6 +73,8 @@ namespace Rt2::MetaData
         void link(Struct* obj, const Xml::Node* node);
 
         void link(Field* obj, const Xml::Node* node);
+
+        void link(Union* obj, const Xml::Node* node);
 
         void link(Constructor* obj, const Xml::Node* node);
 

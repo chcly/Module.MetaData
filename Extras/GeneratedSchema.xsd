@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="CastXML">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element name="Namespace">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="required" />
+              <xs:attribute name="context" type="xs:string" use="optional" />
+              <xs:attribute name="members" type="xs:string" use="optional" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Typedef">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="required" />
+              <xs:attribute name="type" type="xs:string" use="required" />
+              <xs:attribute name="context" type="xs:string" use="required" />
+              <xs:attribute name="location" type="xs:string" use="required" />
+              <xs:attribute name="file" type="xs:string" use="required" />
+              <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+              <xs:attribute name="access" type="xs:string" use="optional" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Class">
+            <xs:complexType>
+              <xs:sequence minOccurs="0">
+                <xs:element name="Base">
+                  <xs:complexType>
+                    <xs:attribute name="type" type="xs:string" use="required" />
+                    <xs:attribute name="access" type="xs:string" use="required" />
+                    <xs:attribute name="virtual" type="xs:unsignedByte" use="required" />
+                    <xs:attribute name="offset" type="xs:unsignedByte" use="required" />
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="optional" />
+              <xs:attribute name="context" type="xs:string" use="required" />
+              <xs:attribute name="location" type="xs:string" use="required" />
+              <xs:attribute name="file" type="xs:string" use="required" />
+              <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+              <xs:attribute name="members" type="xs:string" use="optional" />
+              <xs:attribute name="size" type="xs:unsignedShort" use="optional" />
+              <xs:attribute name="align" type="xs:unsignedByte" use="optional" />
+              <xs:attribute name="befriending" type="xs:string" use="optional" />
+              <xs:attribute name="bases" type="xs:string" use="optional" />
+              <xs:attribute name="incomplete" type="xs:unsignedByte" use="optional" />
+              <xs:attribute name="attributes" type="xs:string" use="optional" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Field">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="required" />
+              <xs:attribute name="type" type="xs:string" use="required" />
+              <xs:attribute name="init" type="xs:string" use="optional" />
+              <xs:attribute name="context" type="xs:string" use="required" />
+              <xs:attribute name="access" type="xs:string" use="required" />
+              <xs:attribute name="location" type="xs:string" use="required" />
+              <xs:attribute name="file" type="xs:string" use="required" />
+              <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+              <xs:attribute name="offset" type="xs:unsignedByte" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Constructor">
+            <xs:complexType>
+              <xs:sequence minOccurs="0">
+                <xs:element maxOccurs="unbounded" name="Argument">
+                  <xs:complexType>
+                    <xs:attribute name="type" type="xs:string" use="required" />
+                    <xs:attribute name="location" type="xs:string" use="required" />
+                    <xs:attribute name="file" type="xs:string" use="required" />
+                    <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+                    <xs:attribute name="name" type="xs:string" use="optional" />
+                    <xs:attribute name="default" type="xs:string" use="optional" />
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="required" />
+              <xs:attribute name="context" type="xs:string" use="required" />
+              <xs:attribute name="access" type="xs:string" use="required" />
+              <xs:attribute name="location" type="xs:string" use="required" />
+              <xs:attribute name="file" type="xs:string" use="required" />
+              <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+              <xs:attribute name="inline" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="artificial" type="xs:unsignedByte" use="optional" />
+              <xs:attribute name="explicit" type="xs:unsignedByte" use="optional" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Converter">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="returns" type="xs:string" use="required" />
+              <xs:attribute name="context" type="xs:string" use="required" />
+              <xs:attribute name="access" type="xs:string" use="required" />
+              <xs:attribute name="location" type="xs:string" use="required" />
+              <xs:attribute name="file" type="xs:string" use="required" />
+              <xs:attribute name="line" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="const" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="mangled" type="xs:string" use="required" />
+              <xs:attribute name="inline" type="xs:unsignedByte" use="optional" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="OperatorMethod">
+            <xs:complexType>
+              <xs:sequence minOccurs="0">
+                <xs:element name="Argument">
+                  <xs:complexType>
+                    <xs:attribute name="type" type="xs:string" use="required" />
+                    <xs:attribute name="location" type="xs:string" use="required" />
+                    <xs:attribute name="file" type="xs:string" use="required" />
+                    <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+                    <xs:attribute name="name" type="xs:string" use="optional" />
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="required" />
+              <xs:attribute name="returns" type="xs:string" use="required" />
+              <xs:attribute name="context" type="xs:string" use="required" />
+              <xs:attribute name="access" type="xs:string" use="required" />
+              <xs:attribute name="location" type="xs:string" use="required" />
+              <xs:attribute name="file" type="xs:string" use="required" />
+              <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+              <xs:attribute name="inline" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="artificial" type="xs:unsignedByte" use="optional" />
+              <xs:attribute name="mangled" type="xs:string" use="required" />
+              <xs:attribute name="const" type="xs:unsignedByte" use="optional" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Destructor">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="required" />
+              <xs:attribute name="context" type="xs:string" use="required" />
+              <xs:attribute name="access" type="xs:string" use="required" />
+              <xs:attribute name="location" type="xs:string" use="required" />
+              <xs:attribute name="file" type="xs:string" use="required" />
+              <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+              <xs:attribute name="inline" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="artificial" type="xs:unsignedByte" use="optional" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="FundamentalType">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="required" />
+              <xs:attribute name="size" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="align" type="xs:unsignedByte" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="ReferenceType">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="type" type="xs:string" use="required" />
+              <xs:attribute name="size" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="align" type="xs:unsignedByte" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="CvQualifiedType">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="type" type="xs:string" use="required" />
+              <xs:attribute name="const" type="xs:unsignedByte" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Unimplemented">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="kind" type="xs:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Variable">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="required" />
+              <xs:attribute name="type" type="xs:string" use="required" />
+              <xs:attribute name="init" type="xs:string" use="optional" />
+              <xs:attribute name="context" type="xs:string" use="required" />
+              <xs:attribute name="access" type="xs:string" use="required" />
+              <xs:attribute name="location" type="xs:string" use="required" />
+              <xs:attribute name="file" type="xs:string" use="required" />
+              <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+              <xs:attribute name="static" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="mangled" type="xs:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Enumeration">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="EnumValue">
+                  <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" use="required" />
+                    <xs:attribute name="init" type="xs:unsignedByte" use="required" />
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="required" />
+              <xs:attribute name="type" type="xs:string" use="required" />
+              <xs:attribute name="context" type="xs:string" use="required" />
+              <xs:attribute name="access" type="xs:string" use="required" />
+              <xs:attribute name="location" type="xs:string" use="required" />
+              <xs:attribute name="file" type="xs:string" use="required" />
+              <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+              <xs:attribute name="scoped" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="size" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="align" type="xs:unsignedByte" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Method">
+            <xs:complexType>
+              <xs:sequence minOccurs="0">
+                <xs:element maxOccurs="unbounded" name="Argument">
+                  <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" use="optional" />
+                    <xs:attribute name="type" type="xs:string" use="required" />
+                    <xs:attribute name="location" type="xs:string" use="required" />
+                    <xs:attribute name="file" type="xs:string" use="required" />
+                    <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+                    <xs:attribute name="default" type="xs:string" use="optional" />
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="required" />
+              <xs:attribute name="returns" type="xs:string" use="required" />
+              <xs:attribute name="context" type="xs:string" use="required" />
+              <xs:attribute name="access" type="xs:string" use="required" />
+              <xs:attribute name="location" type="xs:string" use="required" />
+              <xs:attribute name="file" type="xs:string" use="required" />
+              <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+              <xs:attribute name="inline" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="mangled" type="xs:string" use="optional" />
+              <xs:attribute name="const" type="xs:unsignedByte" use="optional" />
+              <xs:attribute name="static" type="xs:unsignedByte" use="optional" />
+              <xs:attribute name="deprecation" type="xs:string" use="optional" />
+              <xs:attribute name="attributes" type="xs:string" use="optional" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Struct">
+            <xs:complexType>
+              <xs:sequence minOccurs="0">
+                <xs:element name="Base">
+                  <xs:complexType>
+                    <xs:attribute name="type" type="xs:string" use="required" />
+                    <xs:attribute name="access" type="xs:string" use="required" />
+                    <xs:attribute name="virtual" type="xs:unsignedByte" use="required" />
+                    <xs:attribute name="offset" type="xs:unsignedByte" use="required" />
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="required" />
+              <xs:attribute name="context" type="xs:string" use="required" />
+              <xs:attribute name="location" type="xs:string" use="required" />
+              <xs:attribute name="file" type="xs:string" use="required" />
+              <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+              <xs:attribute name="members" type="xs:string" use="optional" />
+              <xs:attribute name="bases" type="xs:string" use="optional" />
+              <xs:attribute name="size" type="xs:unsignedByte" use="optional" />
+              <xs:attribute name="align" type="xs:unsignedByte" use="optional" />
+              <xs:attribute name="incomplete" type="xs:unsignedByte" use="optional" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="PointerType">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="type" type="xs:string" use="required" />
+              <xs:attribute name="size" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="align" type="xs:unsignedByte" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="Union">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="required" />
+              <xs:attribute name="context" type="xs:string" use="required" />
+              <xs:attribute name="access" type="xs:string" use="required" />
+              <xs:attribute name="location" type="xs:string" use="required" />
+              <xs:attribute name="file" type="xs:string" use="required" />
+              <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+              <xs:attribute name="members" type="xs:string" use="required" />
+              <xs:attribute name="size" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="align" type="xs:unsignedByte" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="ElaboratedType">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="type" type="xs:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="ArrayType">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="min" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="max" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="type" type="xs:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="OperatorFunction">
+            <xs:complexType>
+              <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="Argument">
+                  <xs:complexType>
+                    <xs:attribute name="name" type="xs:string" use="required" />
+                    <xs:attribute name="type" type="xs:string" use="required" />
+                    <xs:attribute name="location" type="xs:string" use="required" />
+                    <xs:attribute name="file" type="xs:string" use="required" />
+                    <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+                  </xs:complexType>
+                </xs:element>
+              </xs:sequence>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="required" />
+              <xs:attribute name="returns" type="xs:string" use="required" />
+              <xs:attribute name="context" type="xs:string" use="required" />
+              <xs:attribute name="location" type="xs:string" use="required" />
+              <xs:attribute name="file" type="xs:string" use="required" />
+              <xs:attribute name="line" type="xs:unsignedShort" use="required" />
+              <xs:attribute name="inline" type="xs:unsignedByte" use="required" />
+              <xs:attribute name="mangled" type="xs:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="File">
+            <xs:complexType>
+              <xs:attribute name="id" type="xs:string" use="required" />
+              <xs:attribute name="name" type="xs:string" use="required" />
+            </xs:complexType>
+          </xs:element>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="format" type="xs:string" use="required" />
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

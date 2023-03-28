@@ -11,10 +11,10 @@ namespace Rt2::MetaData
     template <typename T>
     void extract(const MetaFile::Types& all, SimpleArray<T*>& dest)
     {
-        for (auto& [key, val] : all)
+        for (auto& val : all)
         {
-            if (val->isTypeOf(T::id))
-                dest.push_back(static_cast<T*>(val));
+            if (val.second->isTypeOf(T::id))
+                dest.push_back(static_cast<T*>(val.second));
         }
     }
 
