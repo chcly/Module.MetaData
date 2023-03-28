@@ -1,29 +1,27 @@
 #pragma once
 #include "MetaData/Location.h"
+#include "MetaData/TypeExpander.h"
 
 namespace Rt2::MetaData
 {
-
-    using ArgumentQueue = std::deque<Type*>;
-
-    class Argument
+    class Argument final
     {
     private:
         friend class MetaFile;
 
-        Type*    _type{nullptr};
-        String   _name;
-        Location _location;
+        Type* _type{nullptr};
 
-        Type* search(const int code) const;
+        String _name;
+
+        Location _location;
 
     public:
         Argument();
         ~Argument() = default;
 
-        Type* type() const;
+        TypeExpander type() const;
 
-        Location* location();
+        const Location& location() const;
 
         const String& name() const;
 
@@ -34,14 +32,7 @@ namespace Rt2::MetaData
         bool isPointer() const;
 
         bool isFunctionPointer() const;
-
-        void expand(ArgumentQueue& dest) const;
     };
-
-    inline Type* Argument::type() const
-    {
-        return _type;
-    }
 
     inline const String& Argument::name() const
     {

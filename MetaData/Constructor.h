@@ -34,7 +34,7 @@ namespace Rt2::MetaData
 
         const Location* location() const;
 
-        ArgumentListType* arguments();
+        const ArgumentListType& arguments() const;
 
         const ContextType& context() const;
     };

@@ -3,6 +3,7 @@
 #include "MetaData/Typedef.h"
 #include "MetaData/Class.h"
 #include "MetaData/Converter.h"
+#include "MetaData/Constructor.h"
 
 namespace Rt2::MetaData
 {
@@ -57,6 +58,11 @@ namespace Rt2::MetaData
     const ConverterArray& ContextType::converters() const
     {
         return tryGet<Converter>(_converters, _members);
+    }
+
+    const ConstructorArray& ContextType::constructors() const
+    {
+        return tryGet<Constructor>(_constructors, _members);
     }
 
     String ContextType::name(const String& err) const

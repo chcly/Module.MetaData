@@ -14,9 +14,9 @@ namespace Rt2::MetaData
         return &_location;
     }
 
-    ArgumentListType* Constructor::arguments()
+    const ArgumentListType& Constructor::arguments() const
     {
-        return &_arguments;
+        return _arguments;
     }
 
     const ContextType& Constructor::context() const

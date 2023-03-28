@@ -21,6 +21,8 @@ namespace Rt2::MetaData
 
         mutable CacheLock<Converter> _converters;
 
+        mutable CacheLock<Constructor> _constructors;
+
     public:
         TypeCode parentType() const;
 
@@ -33,6 +35,8 @@ namespace Rt2::MetaData
         const ClassArray& classes() const;
 
         const ConverterArray& converters() const;
+
+        const ConstructorArray& constructors() const;
 
         String name(const String& err = "<undefined>") const;
     };

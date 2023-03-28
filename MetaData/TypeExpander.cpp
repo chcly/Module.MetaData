@@ -20,6 +20,18 @@ namespace Rt2::MetaData
 
     void TypeExpander::expand(const Visitor& method, const size_t max) const
     {
+        try
+        {
+            expandImpl(method, max);
+        }
+        catch (Exception& ex)
+        {
+            Console::writeLine(ex.what());
+        }
+    }
+
+    void TypeExpander::expandImpl(const Visitor& method, const size_t max) const
+    {
         size_t depth = 0;
         Type*  cur   = _type;
         while (cur != nullptr && ++depth < max)
@@ -75,7 +87,7 @@ namespace Rt2::MetaData
         }
 
         if (depth >= max)
-            throw Exception("max link limit reached");
+            throw Exception("max expansion search limit reached");
     }
 
     void TypeExpander::expand(TypeArray& dest, const size_t max) const
@@ -87,6 +99,11 @@ namespace Rt2::MetaData
                 return false;
             },
             max);
+    }
+
+    bool TypeExpander::find(const int code) const
+    {
+        return search(code) != nullptr;
     }
 
     Type* TypeExpander::search(const int code) const

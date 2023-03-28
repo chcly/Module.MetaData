@@ -1,15 +1,15 @@
 #include "MetaData/MetaFile.h"
-#include "ArrayType.h"
-#include "Base.h"
-#include "ElaboratedType.h"
-#include "Enumeration.h"
 #include "MetaData/Argument.h"
 #include "MetaData/ArgumentList.h"
+#include "MetaData/ArrayType.h"
+#include "MetaData/Base.h"
 #include "MetaData/Class.h"
 #include "MetaData/Constructor.h"
 #include "MetaData/Converter.h"
 #include "MetaData/CvQualifiedType.h"
 #include "MetaData/Destructor.h"
+#include "MetaData/ElaboratedType.h"
+#include "MetaData/Enumeration.h"
 #include "MetaData/Field.h"
 #include "MetaData/File.h"
 #include "MetaData/Function.h"
@@ -17,18 +17,18 @@
 #include "MetaData/FundamentalType.h"
 #include "MetaData/Method.h"
 #include "MetaData/Namespace.h"
+#include "MetaData/OperatorFunction.h"
 #include "MetaData/OperatorMethod.h"
 #include "MetaData/PointerType.h"
 #include "MetaData/ReferenceType.h"
 #include "MetaData/Struct.h"
 #include "MetaData/TypeListBuilder.h"
 #include "MetaData/Typedef.h"
+#include "MetaData/Unimplemented.h"
 #include "MetaData/Union.h"
-#include "OperatorFunction.h"
-#include "Unimplemented.h"
+#include "MetaData/Variable.h"
 #include "Utils/Char.h"
 #include "Utils/StreamConverters/Hex.h"
-#include "Variable.h"
 #include "Xml/File.h"
 
 namespace Rt2::MetaData
@@ -165,8 +165,10 @@ namespace Rt2::MetaData
     {
         if (Type* val = find(id))
             return val;
-        throw Exception("assert_find failed to resolve: ", id);
-        // return nullptr;
+        throw Exception(
+            "failed to resolve the "
+            "XML tag with the id : ",
+            id);
     }
 
     void MetaFile::clear()
@@ -268,7 +270,7 @@ namespace Rt2::MetaData
     void MetaFile::linkArgument(ArgumentListType* obj, const Xml::Node* node)
     {
         Argument* arg = obj->create();
-        linkLocation(arg->location(), node);
+        linkLocation(&arg->_location, node);
 
         arg->_type = assert_find(node->attribute("type"));
         arg->_name = node->attribute("name");
@@ -350,7 +352,7 @@ namespace Rt2::MetaData
     void MetaFile::link(Constructor* obj, const Xml::Node* node)
     {
         linkLocation(&obj->_location, node);
-        linkArgumentList(obj->arguments(), node);
+        linkArgumentList(&obj->_arguments, node);
 
         obj->_access = Ac::access(node->attribute("access"));
 
@@ -643,6 +645,7 @@ namespace Rt2::MetaData
             return nullptr;
         }
     }
+
     void MetaFile::loadImpl(const Xml::Node* node)
     {
         if (!node)
@@ -656,28 +659,29 @@ namespace Rt2::MetaData
 
     void MetaFile::load(IStream& stream)
     {
+        const Xml::Node* root = nullptr;
         try
         {
             U16 tagCount = 0;
-            if (const Xml::Node* root = Xml::File::detachRead(
-                    FileTags,
-                    std::size(FileTags),
-                    stream,
-                    "MetaData::load",
-                    4096,
-                    64,
-                    &tagCount))
+
+            root = Xml::File::detachRead(FileTags,
+                                         std::size(FileTags),
+                                         stream,
+                                         "MetaData::load",
+                                         4096,
+                                         64,
+                                         &tagCount);
+            if (root)
             {
                 _types.reserve(tagCount);
                 loadImpl(root->firstChildOf(MinTypeCode));
-                delete root;
             }
         }
         catch (Exception& ex)
         {
             Console::writeError(ex.what());
-            clear();
-            // throw;
+            clear();  // free any prior to the exception
         }
+        delete root;  // free the dangled detachment
     }
 }  // namespace Rt2::MetaData

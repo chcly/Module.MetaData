@@ -54,12 +54,12 @@ GTEST_TEST(MetaData, File_002)
     Constructor* c9 = fp.find<Constructor>("_9");
     EXPECT_NE(c9, nullptr);
 
-    ArgumentListType* al = c9->arguments();
+    const ArgumentListType& al = c9->arguments();
 
-    EXPECT_FALSE(al->empty());
-    EXPECT_EQ(al->size(), 1);
+    EXPECT_FALSE(al.empty());
+    EXPECT_EQ(al.size(), 1);
 
-    Argument* arg0 = al->at(0);
+    Argument* arg0 = al.at(0);
     EXPECT_NE(arg0, nullptr);
     EXPECT_TRUE(arg0->isConst());
     EXPECT_TRUE(arg0->isReference());

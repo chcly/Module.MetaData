@@ -15,6 +15,8 @@ namespace Rt2::MetaData
     protected:
         using Visitor = std::function<bool(Type*)>;
 
+        void expandImpl(const Visitor& method, size_t max = MaxExpansion) const;
+
         void expand(const Visitor& method, size_t max = MaxExpansion) const;
 
         Type* search(int code) const;
@@ -24,6 +26,16 @@ namespace Rt2::MetaData
         virtual ~TypeExpander() = default;
 
         void expand(TypeArray& dest, size_t max = MaxExpansion) const;
+
+        bool find(int code) const;
+
+        template <typename T>
+        T* find(const int code)
+        {
+            if (Type* type = search(code))
+                return type->cast<T>();
+            return nullptr;
+        }
     };
 
 }  // namespace Rt2::MetaData
