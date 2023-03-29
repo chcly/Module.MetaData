@@ -4,10 +4,9 @@
 #include "MetaData/Field.h"
 #include "MetaData/Function.h"
 #include "MetaData/FunctionType.h"
-#include "MetaData/Method.h"
+#include "MetaData/FundamentalType.h"
 #include "MetaData/PointerType.h"
 #include "MetaData/ReferenceType.h"
-#include "MetaData/Struct.h"
 #include "MetaData/Typedef.h"
 
 namespace Rt2::MetaData
@@ -87,7 +86,7 @@ namespace Rt2::MetaData
         }
 
         if (depth >= max)
-            throw Exception("max expansion search limit reached");
+            throw Exception("max search limit reached");
     }
 
     void TypeExpander::expand(TypeArray& dest, const size_t max) const
@@ -121,5 +120,72 @@ namespace Rt2::MetaData
             });
         return found;
     }
+
+    Type* TypeExpander::search(const String& id) const
+    {
+        Type* found = nullptr;
+        expand(
+            [id, &found](Type* type)
+            {
+                if (type->name() == id)
+                {
+                    found = type;
+                    return true;
+                }
+                return false;
+            });
+        return found;
+    }
+
+    bool TypeExpander::isTypeOf(const String& id) const
+    {
+        bool result = false;
+        expand(
+            [&result, id](const Type* type)
+            {
+                if (type->name() == id)
+                {
+                    result = true;
+                    return true;
+                }
+                return false;
+            });
+        return result;
+    }
+
+    const Type* TypeExpander::find(const String& id) const
+    {
+        const Type *byName = nullptr;
+        expand(
+            [&byName, id](const Type* type)
+            {
+                if (type->name() == id)
+                {
+                    byName = type;
+                    return true;
+                }
+                return false;
+            });
+        return byName;
+    }
+
+    FundamentalType* TypeExpander::fundamentalType()
+    {
+        return find<FundamentalType>();
+    }
+
+    const Class* TypeExpander::classType(const String& id) const
+    {
+        if (Type * found = search(id); 
+            found != nullptr)
+            return found->cast<Class>();
+        return nullptr;
+    }
+
+    const Class* TypeExpander::classType()
+    {
+        return find<Class>();
+    }
+
 
 }  // namespace Rt2::MetaData

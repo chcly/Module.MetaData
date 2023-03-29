@@ -62,6 +62,7 @@ namespace Rt2::MetaData
         R64Tag,
         UserTypeTag,
         VoidTag,
+        CharTag,
     };
 
     enum DeclFlag

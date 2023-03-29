@@ -11,7 +11,7 @@ namespace Rt2::MetaData
     String Location::readLine() const
     {
         if (_file)
-            return _file->line(Max<int>(lineI()-1, 0));
+            return _file->line(Max<int>(lineI() - 1, 0));
         return {};
     }
 
@@ -21,10 +21,21 @@ namespace Rt2::MetaData
             _file->readLines(lines);
     }
 
-    String Location::filename() const
+    String Location::filename(const bool native) const
     {
         if (_file)
+        {
+            if (native)
+                return Directory::Path(_file->name()).fullPlatform();
             return _file->name();
+        }
+        return {};
+    }
+
+    String Location::basename() const
+    {
+        if (_file)
+            return Directory::Path(filename()).base();
         return {};
     }
 

@@ -9,9 +9,9 @@ namespace Rt2::MetaData
     {
     }
 
-    Location* Class::location()
+    const Location& Class::location() const
     {
-        return &_location;
+        return _location;
     }
 
     const ContextType& Class::context() const

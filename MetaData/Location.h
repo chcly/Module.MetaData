@@ -25,7 +25,9 @@ namespace Rt2::MetaData
 
         void readLines(StringArray& lines) const;
 
-        String filename() const;
+        String filename(bool native=false) const;
+
+        String basename() const;
 
         bool exists() const;
     };

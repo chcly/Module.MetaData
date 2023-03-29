@@ -28,7 +28,7 @@ namespace Rt2::MetaData
 
         size_t alignment() const;
 
-        Location* location();
+        const Location& location() const;
 
         const ContextType& context() const;
     };

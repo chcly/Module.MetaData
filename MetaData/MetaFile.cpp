@@ -82,6 +82,7 @@ namespace Rt2::MetaData
         {                 "float",  R32Tag},
         {                "double",  R64Tag},
         {                  "void", VoidTag},
+        {                  "char", CharTag},
     };
 
     class AttributeConverter
@@ -299,7 +300,7 @@ namespace Rt2::MetaData
     void MetaFile::link(Class* obj, const Xml::Node* node)
     {
         mergeMembers(context<Class>(obj), node);
-        linkLocation(obj->location(), node);
+        linkLocation(&obj->_location, node);
 
         obj->_sizeInBytes = Char::toUint64(node->attribute("size", "0"));
 

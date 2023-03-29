@@ -21,6 +21,16 @@ namespace Rt2::MetaData
 
         Type* search(int code) const;
 
+        Type* search(const String& id) const;
+
+        template <typename T>
+        T* find()
+        {
+            if (Type* type = search(T::id))
+                return type->cast<T>();
+            return nullptr;
+        }
+
     public:
         explicit TypeExpander(Type* type);
         virtual ~TypeExpander() = default;
@@ -29,13 +39,15 @@ namespace Rt2::MetaData
 
         bool find(int code) const;
 
-        template <typename T>
-        T* find(const int code)
-        {
-            if (Type* type = search(code))
-                return type->cast<T>();
-            return nullptr;
-        }
+        bool isTypeOf(const String& id) const;
+
+        const Type* find(const String& id) const;
+
+        FundamentalType* fundamentalType();
+
+        const Class* classType(const String& id) const;
+
+        const Class* classType();
     };
 
 }  // namespace Rt2::MetaData

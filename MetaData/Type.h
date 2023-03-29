@@ -37,6 +37,9 @@ namespace Rt2::MetaData
         T* cast();
 
         template <typename T>
+        const T* cast() const;
+
+        template <typename T>
         T* assert_cast();
 
         bool isTypeOf(TypeCode code) const;
@@ -47,6 +50,14 @@ namespace Rt2::MetaData
     {
         if (code() == T::id)
             return static_cast<T*>(this);
+        return nullptr;
+    }
+
+    template <typename T>
+    const T* Type::cast() const
+    {
+        if (code() == T::id)
+            return static_cast<const T*>(this);
         return nullptr;
     }
 
