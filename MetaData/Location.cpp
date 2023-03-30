@@ -27,7 +27,7 @@ namespace Rt2::MetaData
         {
             if (native)
                 return Directory::Path(_file->name()).fullPlatform();
-            return _file->name();
+            return Directory::Path(_file->name()).full();
         }
         return {};
     }

@@ -3,9 +3,24 @@ include(TestDirectory)
 include(CastXmlConfig)
 include(TargetDebugOptions)
 
-set(From_CSV "ClassA,File1,LinkOrder,Integers,Module")
-extract_source(SRC ${CMAKE_CURRENT_SOURCE_DIR}/Source/)
-compile_and_transfer(XML ${CMAKE_CURRENT_SOURCE_DIR} ${From_CSV} ${SRC})
+
+
+# include paths to relay to the compiler
+cast_xml_include(${Utils_INCLUDE})
+
+# specific symbols to extract
+cast_xml_symbols(
+    ClassA
+    File1
+    LinkOrder
+    Integers
+    Module
+)
+cast_xml_cxx_flags(-Wall -std=c++17)
+cast_transfer_dir(${CMAKE_CURRENT_SOURCE_DIR})
+
+file(GLOB SRC Source/*.cpp)
+add_cast_xml(XML ${SRC})
 
 gen_path_to_here()
 
