@@ -1,10 +1,6 @@
 # MetaData
 
-Is a small type library that loads and reconstructs a [CastXML](https://github.com/CastXML/CastXML) file for use as meta information.
-
-It is experimental but it has the potential be used to write language bindings from C++ to other languages, or other code generating tools.
-
-A neat goal would be to make it similar in use to C# assembly classes except that only needed items can be fed to it.
+Is a small type library reconstructs [CastXML](https://github.com/CastXML/CastXML) files for use as meta information.
 
 ## Testing
 
